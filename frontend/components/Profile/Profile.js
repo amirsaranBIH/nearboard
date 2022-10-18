@@ -32,11 +32,11 @@ export default function Profile({ accountId, wallet }) {
           <div className="section">
             <MainHeading heading={"My Projects"} tooltip={"List of my projects where I can create events"} />
             <div className="my-projects">
-              <ProjectCard project={""} showOptions={""} />
-              <ProjectCard project={""} showOptions={""} />
-              <ProjectCard project={""} showOptions={""} />
-              <ProjectCard project={""} showOptions={""} />
-              <ProjectCard project={""} showOptions={""} />
+              <ProjectCard project={""} showOptions={true} />
+              <ProjectCard project={""} showOptions={true} />
+              <ProjectCard project={""} showOptions={true} />
+              <ProjectCard project={""} showOptions={true} />
+              <ProjectCard project={""} showOptions={true} />
             </div>
           </div>
         </main>

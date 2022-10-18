@@ -1,13 +1,33 @@
 import React from 'react';
 
 import infoIcon from "../../../assets/icons/info.svg"
-import moreIcon from "../../../assets/icons/more.svg"
 
 import ExternalLink from '../ExternalLink/ExternalLink';
+import MoreOptions from '../MoreOptions/MoreOptions';
 
 import './ProjectCard.css';
 
+const options = [
+  {
+    text: "View Project",
+    method: () => {},
+  },
+  {
+    text: "Create Event",
+    method: () => {},
+  },
+  {
+    text: "Update",
+    method: () => {},
+  },
+  {
+    text: "Delete",
+    method: () => {},
+  }
+];
+
 export default function ProjectCard({ project, showOptions }) {
+
   return (
     <div className="project-card">
       <div className="project-card-top">
@@ -19,9 +39,7 @@ export default function ProjectCard({ project, showOptions }) {
       </div>
       <div className="project-card-description">Bridge + EVM Scaling Solution for Ethereum.</div>
       <span className="tag">Event</span>
-      <div className="more">
-        <img src={moreIcon} alt="more icon" />
-      </div>
+      {showOptions && <MoreOptions options={options} />}
     </div>
   );
 }

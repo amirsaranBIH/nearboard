@@ -1,0 +1,19 @@
+.more {
+    position: relative;
+}
+
+.more-options {
+    position: fixed;
+    box-shadow: 0px 4px 10px 0px #00000040;
+    background-color: white;
+    border-radius: 10px;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: .5em;
+    margin-top: 30px;
+}
+
+.more-options > div {
+    cursor: pointer;
+}

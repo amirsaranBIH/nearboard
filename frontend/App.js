@@ -20,7 +20,7 @@ export default function App({ isSignedIn, Nearboard, wallet }) {
           <img className="logo" src={logo} alt="Nearboard logo" />
         </Link>
         <nav className="navigation">
-          <Link className="link" to="/projects">Project</Link>
+          <Link className="link" to="/projects">Projects</Link>
           <Link className="link" to="/events">Events</Link>
           <Link className="link" to="/faq">FAQ</Link>
           {isSignedIn ? <Link to="/profile"><span className="btn btn--small">CONNECTED</span></Link> : <span className="btn" onClick={() => {wallet.signIn()}}>CONNECT</span>}
