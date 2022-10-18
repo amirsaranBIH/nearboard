@@ -1,0 +1,10 @@
+.account-id {
+    font-size: 20px;
+    margin-bottom: 1em;
+}
+
+.my-projects {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1em;
+}

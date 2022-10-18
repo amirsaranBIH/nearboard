@@ -1,0 +1,47 @@
+.upcoming-events {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.event {
+    display: flex;
+    gap: 1em;
+}
+
+.event-date {
+    background-color: var(--light-grey);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+}
+
+.event-date-month {
+    font-size: 14px;
+}
+
+.event-date-day {
+    font-size: 40px;
+    line-height: 40px;
+    color: var(--primary);
+}
+
+.event-info {
+    display: flex;
+    flex-direction: column;
+    gap: .35em;
+}
+
+.event-name {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.view-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+}

@@ -30,4 +30,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-contract/target
+frontend/dist
+frontend/.parcel-cache
+contract/build
+contract/neardev

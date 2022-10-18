@@ -6,8 +6,6 @@ import { providers } from 'near-api-js';
 // wallet selector UI
 import '@near-wallet-selector/modal-ui/styles.css';
 import { setupModal } from '@near-wallet-selector/modal-ui';
-import LedgerIconUrl from '@near-wallet-selector/ledger/assets/ledger-icon.png';
-import MyNearIconUrl from '@near-wallet-selector/my-near-wallet/assets/my-near-wallet-icon.png';
 
 // wallet selector options
 import { setupWalletSelector } from '@near-wallet-selector/core';
@@ -29,16 +27,16 @@ export class Wallet {
     // key, so the user skips signing non-payable transactions.
     // Omitting the accountId will result in the user being
     // asked to sign all transactions.
-    this.createAccessKeyFor = createAccessKeyFor
-    this.network = 'testnet'
+    this.createAccessKeyFor = createAccessKeyFor;
+    this.network = network;
   }
 
   // To be called when the website loads
   async startUp() {
     this.walletSelector = await setupWalletSelector({
       network: this.network,
-      modules: [setupMyNearWallet({ iconUrl: MyNearIconUrl }),
-      setupLedger({ iconUrl: LedgerIconUrl })],
+      modules: [setupMyNearWallet(),
+      setupLedger()],
     });
 
     const isSignedIn = this.walletSelector.isSignedIn();
