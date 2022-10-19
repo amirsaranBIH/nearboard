@@ -27,8 +27,9 @@ type Event = {
   id: number;
   name: string;
   eventUrl: string;
-  startDate: Date;
+  startDate: number;
   eventType: EventType;
+  projectId: number;
   questions: { [id: number]: Question };
 };
 
@@ -36,79 +37,23 @@ type Question = {
   id: number;
   question: string;
   asker: AccountId;
+  eventId: number;
   votes: { [voter: AccountId]: Vote };
 };
 
 type Vote = {
-  nearRepresented: bigint;
+  nearRepresented: string;
 };
-
-type CreateProjectParams = {
-  name: string;
-  description: string;
-  websiteUrl: string;
-  logoUrl: string;
-}
-
-type UpdateProjectParams = {
-  projectId: number;
-  name: string;
-  description: string;
-  websiteUrl: string;
-  logoUrl: string;
-}
-
-type CreateEventParams = {
-  projectId: number;
-  name: string;
-  eventUrl: string;
-  startDate: Date;
-  eventType: EventType;
-}
-
-type UpdateEventParams = {
-  projectId: number;
-  eventId: number;
-  name: string;
-  eventUrl: string;
-  startDate: Date;
-  eventType: EventType;
-}
-
-type CreateQuestionParams = {
-  projectId: number;
-  eventId: number;
-  question: string;
-}
-
-type UpdateQuestionParams = {
-  projectId: number;
-  eventId: number;
-  questionId: number;
-  question: string;
-}
-
-type VoteParams = {
-  projectId: number;
-  eventId: number;
-  questionId: number;
-}
-
-type UnvoteParams = {
-  projectId: number;
-  eventId: number;
-  questionId: number;
-}
 
 @NearBindgen({})
 class Nearboard {
   projectId = 0;
   eventId = 0;
   questionId = 0;
-  projects: { [id: number]: Project };
+  projects: { [id: number]: Project } = {};
 
   @view({})
-  getProject(projectId: number): Project {
+  getProject({ projectId }): Project {
     return this.projects[projectId];
   }
 
@@ -124,11 +69,11 @@ class Nearboard {
   }
 
   @view({})
-  getUserProjects(): Project[] {
+  getUserProjects({ accountId }): Project[] {
     const projects: Project[] = [];
 
     for (const id in this.projects) {
-      if (this.projects[this.projectId].owner === near.signerAccountId()) {
+      if (this.projects[id].owner === accountId) {
         projects.push(this.projects[id]);
       }
     }
@@ -137,12 +82,12 @@ class Nearboard {
   }
   
   @view({})
-  getEvent(projectId: number, eventId: number): Event {
+  getEvent({ projectId, eventId }): Event {
     return this.projects[projectId].events[eventId];
   }
 
   @view({})
-  getEvents(projectId: number): Event[] {
+  getProjectEvents({ projectId }): Event[] {
     const events: Event[] = [];
 
     for (const id in this.projects[projectId].events) {
@@ -151,14 +96,27 @@ class Nearboard {
 
     return events;
   }
+
+  @view({})
+  getAllEvents(): Event[] {
+    const events: Event[] = [];
+
+    for (const projectId in this.projects) {
+      for (const eventId in this.projects[projectId].events) {
+        events.push(this.projects[projectId].events[eventId]);
+      }
+    }
+
+    return events;
+  }
   
   @view({})
-  getQuestion(projectId: number, eventId: number, questionId: number): Question {
+  getQuestion({ projectId, eventId, questionId }): Question {
     return this.projects[projectId].events[eventId].questions[questionId];
   }
 
   @view({})
-  getQuestions(projectId: number, eventId: number): Question[] {
+  getQuestions({ projectId, eventId }): Question[] {
     const questions: Question[] = [];
 
     for (const id in this.projects[projectId].events[eventId].questions) {
@@ -174,7 +132,7 @@ class Nearboard {
 
     for (const projectId in this.projects) {
       for (const eventId in this.projects[projectId].events) {
-        if (this.projects[projectId].events[eventId].startDate < new Date()) {
+        if (this.projects[projectId].events[eventId].startDate < near.blockTimestamp()) {
           events.push(this.projects[projectId].events[eventId]);
         }
       }
@@ -189,7 +147,7 @@ class Nearboard {
 
     for (const projectId in this.projects) {
       for (const eventId in this.projects[projectId].events) {
-        if (this.projects[projectId].events[eventId].startDate >= new Date()) {
+        if (this.projects[projectId].events[eventId].startDate >= near.blockTimestamp()) {
           events.push(this.projects[projectId].events[eventId]);
         }
       }
@@ -199,11 +157,11 @@ class Nearboard {
   }
 
   @view({})
-  getUpcomingEvents(projectId: number): Event[] {
+  getUpcomingEvents({ projectId }): Event[] {
     const events: Event[] = [];
 
     for (const eventId in this.projects[projectId].events) {
-      if (this.projects[projectId].events[eventId].startDate < new Date()) {
+      if (this.projects[projectId].events[eventId].startDate < near.blockTimestamp()) {
         events.push(this.projects[projectId].events[eventId]);
       }
     }
@@ -212,11 +170,11 @@ class Nearboard {
   }
 
   @view({})
-  getPreviousEvents(projectId: number): Event[] {
+  getPreviousEvents({ projectId }): Event[] {
     const events: Event[] = [];
 
     for (const eventId in this.projects[projectId].events) {
-      if (this.projects[projectId].events[eventId].startDate >= new Date()) {
+      if (this.projects[projectId].events[eventId].startDate >= near.blockTimestamp()) {
         events.push(this.projects[projectId].events[eventId]);
       }
     }
@@ -225,13 +183,16 @@ class Nearboard {
   }
   
   @view({})
-  getPopularQuestions(): Question[] {
-    const questions: Question[] = [];
+  getPopularQuestions() {
+    const questions = [];
     
     for (const projectId in this.projects) {
       for (const eventId in this.projects[projectId].events) {
         for (const questionId in this.projects[projectId].events[eventId].questions) {
-          questions.push(this.projects[projectId].events[eventId].questions[questionId]);
+          questions.push({
+            ...this.projects[projectId].events[eventId].questions[questionId],
+            event: this.projects[projectId].events[eventId],
+          });
         }
       }
     }
@@ -265,11 +226,11 @@ class Nearboard {
       errorMessages.push("Project description must be 100 characters or less");
     }
 
-    if (this.isUrl(project.websiteUrl)) {
+    if (!this.isUrl(project.websiteUrl)) {
       errorMessages.push("Invalid website url");
     }
 
-    if (this.isUrl(project.logoUrl)) {
+    if (!this.isUrl(project.logoUrl)) {
       errorMessages.push("Invalid logo url");
     }
 
@@ -279,7 +240,7 @@ class Nearboard {
   }
 
   @call({})
-  createProject(params: CreateProjectParams): number {
+  createProject({ name, description, websiteUrl, logoUrl }): number {
     if (near.accountBalance() < CREATE_PROJECT_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_PROJECT_MINIMUM_NEAR} NEAR to create a project`);
     }
@@ -289,11 +250,11 @@ class Nearboard {
     const project: Project = {
       id: this.projectId,
       owner: near.signerAccountId(),
-      name: params.name,
-      description: params.description,
-      websiteUrl: params.websiteUrl,
-      logoUrl: params.logoUrl,
-      events: [],
+      name: name,
+      description: description,
+      websiteUrl: websiteUrl,
+      logoUrl: logoUrl,
+      events: {},
     };
 
     this.validateProject(project);
@@ -304,41 +265,42 @@ class Nearboard {
   }
 
   @call({})
-  updateProject(params: UpdateProjectParams) {
-    let project = this.getProject(params.projectId);
+  updateProject({ projectId, name, description, websiteUrl, logoUrl }) {
+    let project = this.getProject({ projectId });
     
     const newProject: Project = {
       id: project.id,
       owner: project.owner,
-      name: params.name,
-      description: params.description,
-      websiteUrl: params.websiteUrl,
-      logoUrl: params.logoUrl,
+      name: name,
+      description: description,
+      websiteUrl: websiteUrl,
+      logoUrl: logoUrl,
       events: project.events,
     };
 
     this.validateProject(newProject);
 
-    this.projects[params.projectId] = newProject;
+    this.projects[projectId] = newProject;
   }
 
   @call({})
-  createEvent(params: CreateEventParams): number {
+  createEvent({ projectId, name, eventUrl, startDate, eventType }): number {
     if (near.accountBalance() < CREATE_EVENT_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_EVENT_MINIMUM_NEAR} NEAR to create an event`);
     }
 
     this.eventId++;
 
-    const project = this.getProject(params.projectId);
+    const project = this.getProject({ projectId });
     
     const event: Event = {
       id: this.eventId,
-      name: params.name,
-      eventUrl: params.eventUrl,
-      startDate: params.startDate,
-      eventType: params.eventType,
-      questions: [],
+      name: name,
+      eventUrl: eventUrl,
+      startDate: startDate,
+      eventType: eventType,
+      projectId,
+      questions: {},
     };
 
     project.events[this.eventId] = event;
@@ -347,72 +309,80 @@ class Nearboard {
   }
 
   @call({})
-  updateEvent(params: UpdateEventParams) {
-    let event = this.getEvent(params.projectId, params.eventId);
+  updateEvent({ projectId, eventId, name, eventUrl, startDate, eventType }) {
+    let event = this.getEvent({ projectId, eventId });
 
     const newEvent: Event = {
       id: event.id,
-      name: params.name,
-      eventUrl: params.eventUrl,
-      startDate: params.startDate,
-      eventType: params.eventType,
+      name: name,
+      eventUrl: eventUrl,
+      startDate: startDate,
+      eventType: eventType,
+      projectId,
       questions: event.questions,
     };
 
-    this.projects[params.projectId].events[params.eventId] = newEvent;
+    this.projects[projectId].events[eventId] = newEvent;
   }
 
   @call({})
-  createQuestion(params: CreateQuestionParams): number {
+  createQuestion({ projectId, eventId, question }): number {
     if (near.accountBalance() < CREATE_QUESTION_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_QUESTION_MINIMUM_NEAR} NEAR to create a question`);
     }
 
     this.questionId++;
+    const asker = near.signerAccountId();
 
-    const event = this.getEvent(params.projectId, params.eventId);
+    const event = this.getEvent({ projectId, eventId });
     
-    const question: Question = {
+    const newQuestion: Question = {
       id: this.questionId,
-      asker: near.signerAccountId(),
-      question: params.question,
-      votes: {},
+      asker,
+      question: question,
+      eventId,
+      votes: {
+        [asker]: {
+          nearRepresented: near.accountBalance().toString(),
+        }
+      },
     };
 
-    event.questions[this.questionId] = question;
+    event.questions[this.questionId] = newQuestion;
 
     return this.questionId;
   }
 
   @call({})
-  updateQuestion(params: UpdateQuestionParams) {
-    let question = this.getQuestion(params.projectId, params.eventId, params.questionId);
+  updateQuestion({ projectId, eventId, questionId, question }) {
+    let currentQuestion = this.getQuestion({ projectId, eventId, questionId });
 
     const newQuestion: Question = {
-      id: question.id,
-      asker: question.asker,
-      question: params.question,
-      votes: question.votes,
+      id: currentQuestion.id,
+      asker: currentQuestion.asker,
+      question: question,
+      eventId,
+      votes: currentQuestion.votes,
     };
 
-    this.projects[params.projectId].events[params.eventId].questions[params.questionId] = newQuestion;
+    this.projects[projectId].events[eventId].questions[questionId] = newQuestion;
   }
 
   @call({})
-  vote(params: VoteParams) {
+  vote({ projectId, eventId, questionId }) {
     if (near.accountBalance() < VOTE_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${VOTE_MINIMUM_NEAR} NEAR to vote`);
     }
     
     const vote: Vote = {
-      nearRepresented: near.accountBalance(),
+      nearRepresented: near.accountBalance().toString(),
     };
 
-    this.projects[params.projectId].events[params.eventId].questions[params.questionId].votes[near.signerAccountId()] = vote;
+    this.projects[projectId].events[eventId].questions[questionId].votes[near.signerAccountId()] = vote;
   }
 
   @call({})
-  unvote(params: UnvoteParams) {
-    delete this.projects[params.projectId].events[params.eventId].questions[params.questionId].votes[near.signerAccountId()];
+  unvote({ projectId, eventId, questionId }) {
+    delete this.projects[projectId].events[eventId].questions[questionId].votes[near.signerAccountId()];
   }
 }

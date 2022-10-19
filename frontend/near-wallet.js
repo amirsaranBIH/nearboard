@@ -95,6 +95,12 @@ export class Wallet {
           },
         },
       ],
+    })
+    .then(res => {
+      return Buffer.from(res.status.SuccessValue, "base64").toString();
+    })
+    .catch(err => {
+      console.log(err);
     });
   }
 

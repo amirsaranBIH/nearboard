@@ -29,21 +29,21 @@ export default function App({ isSignedIn, Nearboard, wallet }) {
           <Link className="link" to="/projects">Projects</Link>
           <Link className="link" to="/events">Events</Link>
           <Link className="link" to="/faq">FAQ</Link>
-          {isSignedIn ? <Link to="/profile"><span className="btn btn--small">PROFILE</span></Link> : <span className="btn" onClick={() => {wallet.signIn()}}>CONNECT</span>}
+          {isSignedIn ? <Link to="/profile"><span className="btn btn--small">PROFILE</span></Link> : <span className="btn btn--small" onClick={() => {wallet.signIn()}}>CONNECT</span>}
         </nav>
       </header>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/event/1" element={<Event />} />
-        <Route path="project/1/event/1/update" element={<UpdateEvent />} />
+        <Route path="/" element={<Home Nearboard={Nearboard} />} />
+        <Route path="/projects" element={<Projects Nearboard={Nearboard} />} />
+        <Route path="/events" element={<Events Nearboard={Nearboard} />} />
+        <Route path="/project/:projectId/event/:eventId" element={<Event Nearboard={Nearboard} />} />
+        <Route path="/project/:projectId/event/:eventId/update" element={<UpdateEvent Nearboard={Nearboard} />} />
         <Route path="/faq" element={<Faq />} />
-        <Route path="/profile" element={isSignedIn ? <Profile accountId={wallet.accountId} wallet={wallet} /> : <Navigate to="/" />} />
-        <Route path="/project/:id" element={<Project />} />
-        <Route path="/create-project" element={<CreateProject />} />
-        <Route path="/project/:id/update" element={<UpdateProject />} />
-        <Route path="/project/:id/create-event" element={<CreateEvent />} />
+        <Route path="/profile" element={isSignedIn ? <Profile Nearboard={Nearboard} accountId={wallet.accountId} wallet={wallet} /> : <Navigate to="/" />} />
+        <Route path="/project/:id" element={<Project Nearboard={Nearboard} />} />
+        <Route path="/create-project" element={<CreateProject Nearboard={Nearboard} />} />
+        <Route path="/project/:id/update" element={<UpdateProject Nearboard={Nearboard} />} />
+        <Route path="/project/:id/create-event" element={<CreateEvent Nearboard={Nearboard} />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>

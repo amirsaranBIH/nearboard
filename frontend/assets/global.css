@@ -132,6 +132,15 @@ a {
   outline: none;
 }
 
+select.input::-ms-expand {
+  display: none;
+}
+
+select.input {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
 .input::placeholder {
   font-family: "Raleway", Arial, Helvetica, sans-serif;
 }

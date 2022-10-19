@@ -15,31 +15,31 @@ export default function ProjectCard({ project, showOptions }) {
   return (
     <div className="project-card">
       <div className="project-card-top">
-        <img className="project-card-image" src={infoIcon} alt="Project name" />
+        <img className="project-card-image" src={project.logoUrl} alt={project.name} />
         <div className="project-card-info">
-          <div className="project-card-name">Aurora</div>
-          <ExternalLink text={"https://aurora.dev/something/long/here"} to={"https://aurora.dev/something/long/here"} />
+          <div className="project-card-name">{project.name}</div>
+          <ExternalLink text={project.websiteUrl} to={project.websiteUrl} />
         </div>
       </div>
-      <div className="project-card-description">Bridge + EVM Scaling Solution for Ethereum.</div>
+      <div className="project-card-description">{project.description}</div>
       <span className="tag">EVENT SOON</span>
       {showOptions && <MoreOptions options={[
         {
           text: "View Project",
           method: () => {
-            navigate("/project/1");
+            navigate(`/project/${project.id}`);
           },
         },
         {
           text: "Update Project",
           method: () => {
-            navigate("/project/1/update");
+            navigate(`/project/${project.id}/update`);
           },
         },
         {
           text: "Create Event",
           method: () => {
-            navigate("/create-event");
+            navigate(`/project/${project.id}/create-event`);
           },
         },
         {

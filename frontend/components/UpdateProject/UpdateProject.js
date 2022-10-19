@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import EventCard from '../partials/EventCard/EventCard';
 import MainHeading from '../partials/MainHeading/MainHeading';
@@ -9,13 +9,24 @@ import FaqSection from '../sections/FaqSection/FaqSection';
 
 import './UpdateProject.css';
 
-export default function UpdateProject() {
+export default function UpdateProject({ Nearboard }) {
+  const { id } = useParams();
+
+  const [project, setProject] = useState({});
+
+  useEffect(() => {
+    Nearboard.getProject(parseInt(id, 10)).then(res => {
+      console.log(res)
+      setProject(res);
+    });
+  }, []);
+
   return (
     <div className="update-project">
       <div className="wrapper">
         <aside className="aside">
           <div className="section">
-              <ProjectCard />
+              <ProjectCard project={project} />
           </div>
           <FaqSection />
         </aside>
@@ -34,12 +45,11 @@ export default function UpdateProject() {
             </form>
             <MainHeading heading={"Aurora Events"} tooltip={"Create and update event information"} />
             <div className="events">
-              <EventCard showOptions={true} />
-              <EventCard showOptions={true} />
-              <EventCard showOptions={true} />
-              <EventCard showOptions={true} />
+              {project.events && Object.values(project.events).map(event => {
+                return <EventCard key={event.id} project={project} event={event} showOptions={true} />;
+              })}
             </div>
-            <Link to="/project/1/create-event"><button className="btn">+ CREATE EVENT</button></Link>
+            <Link to={`/project/${project.id}/create-event`}><button className="btn">+ CREATE EVENT</button></Link>
           </div>
         </main>
       </div>

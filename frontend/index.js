@@ -12,7 +12,7 @@ import { Wallet } from './near-wallet';
 const wallet = new Wallet({ createAccessKeyFor: process.env.CONTRACT_NAME })
 
 // Abstract the logic of interacting with the contract to simplify your flow
-const Nearboard = new Nearboard({ contractId: process.env.CONTRACT_NAME, walletToUse: wallet });
+const nearboard = new Nearboard({ contractId: process.env.CONTRACT_NAME, walletToUse: wallet });
 
 // Setup on page load
 window.onload = async () => {
@@ -20,5 +20,5 @@ window.onload = async () => {
 
   const container = document.getElementById('root');
   const root = createRoot(container);
-  root.render(<App isSignedIn={isSignedIn} Nearboard={Nearboard} wallet={wallet} />);
+  root.render(<App isSignedIn={isSignedIn} Nearboard={nearboard} wallet={wallet} />);
 }

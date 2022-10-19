@@ -8,6 +8,8 @@
 }
 
 .project-card-image {
+    border-radius: 100px;
+    max-width: 60px;
     min-width: 60px;
 }
 
