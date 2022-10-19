@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ExternalLink from '../ExternalLink/ExternalLink';
 import MoreOptions from '../MoreOptions/MoreOptions';
 
@@ -56,7 +56,7 @@ export default function EventCard({ event, showOptions }) {
         </div>
         <div className="event-info">
             <span className="event-name">{event.name}</span>
-            <span className="event-project"><ExternalLink text={event.eventUrl} to={event.eventUrl} /></span>
+            <span className="event-project"><ExternalLink to={event.eventUrl} /></span>
             <span className="event-type">
                 <span className="tag">{formatEventType(event.eventType)}</span>
             </span>

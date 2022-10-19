@@ -3,9 +3,3 @@
     align-items: center;
     cursor: pointer;
 }
-
-.external-link span {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}

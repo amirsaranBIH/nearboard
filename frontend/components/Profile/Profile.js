@@ -39,7 +39,7 @@ export default function Profile({ Nearboard, accountId, wallet }) {
               <img src={profileIcon} alt="profile icon" />
               <span>Logged in as</span>
             </div>
-            <div className="account-id"><ExternalLink text={accountId} to={"https://explorer.testnet.near.org/accounts/" + accountId} /></div>
+            <div className="account-id"><ExternalLink to={"https://explorer.testnet.near.org/accounts/" + accountId} /></div>
             <div className="profile-button">
               <button className="btn" onClick={switchWallet}>Switch wallet</button>
               <button className="btn btn--secondary" onClick={signOut}>Log out</button>

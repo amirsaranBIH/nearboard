@@ -50,7 +50,7 @@ export default function Project({ Nearboard }) {
             <AskQuestion Nearboard={Nearboard} projectId={project.id} eventId={upcomingEvent.id} />
             <div className="questions">
               {upcomingEvent && Object.values(upcomingEvent.questions).map(question => {
-                return <Question key={question.id} question={question} />
+                return <Question key={question.id} question={question} event={upcomingEvent} />
               })}
             </div>
           </div>

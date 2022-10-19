@@ -153,3 +153,9 @@ select.input {
   color: white;
   text-transform: uppercase;
 }
+
+.questions {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}

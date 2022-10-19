@@ -18,8 +18,6 @@ export default function Question({ event, question }) {
   }
 
   useEffect(() => {
-
-
     calculateNearRepresented();
   }, []);
 
@@ -28,7 +26,7 @@ export default function Question({ event, question }) {
       <div className="question-text">{question.question}</div>
       <hr />
       <div className="question-info">
-        <div>asks {question.asker} - for <Link className="link" to={event.eventUrl}>{event.name}</Link></div>
+        <div>asks {question.asker} - for <Link className="link" to={"/project/" + event.projectId + "/event/" + event.id}>{event.name}</Link></div>
         <div className="question-vote">
           <div className="question-vote-btn">
             <img src={arrowUpIcon} alt="arrow up icon" />

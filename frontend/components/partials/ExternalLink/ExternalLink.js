@@ -6,6 +6,6 @@ import './ExternalLink.css';
 
 export default function ExternalLink({ text, to }) {
   return (
-    <a className="external-link link" href={to} title={to} target="_blank" rel="noopener noreferrer"><span>{text}</span> <img src={externalLinkIcon} alt="external link icon" /></a>
+    <a className="external-link link" href={to} title={to} target="_blank" rel="noopener noreferrer"><span>learn more</span> <img src={externalLinkIcon} alt="external link icon" /></a>
   );
 }

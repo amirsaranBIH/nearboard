@@ -1,6 +1,6 @@
 .ask-question {
     display: flex;
-    gap: 1em;
+    gap: .5em;
     margin-bottom: 1em;
 }
 

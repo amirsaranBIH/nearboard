@@ -3,14 +3,9 @@
     gap: .5em;
 }
 
-.project-card-info {
-    min-width: 0;
-}
-
 .project-card-image {
     border-radius: 100px;
     max-width: 60px;
-    min-width: 60px;
 }
 
 .project-card-name {

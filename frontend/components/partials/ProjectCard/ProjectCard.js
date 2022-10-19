@@ -2,8 +2,6 @@ import React from 'react';
 
 import { useNavigate } from "react-router-dom";
 
-import infoIcon from "../../../assets/icons/info.svg"
-
 import ExternalLink from '../ExternalLink/ExternalLink';
 import MoreOptions from '../MoreOptions/MoreOptions';
 
@@ -18,7 +16,7 @@ export default function ProjectCard({ project, showOptions }) {
         <img className="project-card-image" src={project.logoUrl} alt={project.name} />
         <div className="project-card-info">
           <div className="project-card-name">{project.name}</div>
-          <ExternalLink text={project.websiteUrl} to={project.websiteUrl} />
+          <ExternalLink to={project.websiteUrl} />
         </div>
       </div>
       <div className="project-card-description">{project.description}</div>
