@@ -60,7 +60,7 @@ a {
 }
 
 .btn {
-  padding: .75em 1.5em;
+  padding: 1em 1.5em;
   border-radius: 100px;
   background-color: var(--primary);
   color: white;
@@ -96,7 +96,7 @@ a {
 .section {
   background-color: white;
   border-radius: 10px;
-  padding: 1.5em;
+  padding: 1em;
   overflow-y: auto;
   overflow-x: hidden;
   max-height: calc(100vh - var(--header-height) - (var(--gap) * 2));
@@ -116,6 +116,12 @@ a {
   font-weight: 600;
   gap: .3em;
   margin-bottom: .5em;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 }
 
 .input {

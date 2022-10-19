@@ -1,0 +1,14 @@
+.ask-question {
+    display: flex;
+    gap: 1em;
+    margin-bottom: 1em;
+}
+
+
+.ask-btn {
+    border: 0;
+    border-radius: 100px;
+    background-color: var(--primary);
+    color: white;
+    width: 50px;
+}

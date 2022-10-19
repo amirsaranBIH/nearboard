@@ -257,16 +257,12 @@ class Nearboard {
       errorMessages.push("Project name must be at least 3 characters");
     }
 
-    if (project.name.length > 100) {
-      errorMessages.push("Project name must be 100 characters or less");
+    if (project.name.length > 50) {
+      errorMessages.push("Project name must be 50 characters or less");
     }
 
-    if (project.description.length < 100) {
-      errorMessages.push("Project description must be at least 100 characters");
-    }
-
-    if (project.description.length > 500) {
-      errorMessages.push("Project description must be 500 characters or less");
+    if (project.description.length > 100) {
+      errorMessages.push("Project description must be 100 characters or less");
     }
 
     if (this.isUrl(project.websiteUrl)) {

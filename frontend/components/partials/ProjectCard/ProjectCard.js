@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { useNavigate } from "react-router-dom";
+
 import infoIcon from "../../../assets/icons/info.svg"
 
 import ExternalLink from '../ExternalLink/ExternalLink';
@@ -7,26 +9,8 @@ import MoreOptions from '../MoreOptions/MoreOptions';
 
 import './ProjectCard.css';
 
-const options = [
-  {
-    text: "View Project",
-    method: () => {},
-  },
-  {
-    text: "Create Event",
-    method: () => {},
-  },
-  {
-    text: "Update",
-    method: () => {},
-  },
-  {
-    text: "Delete",
-    method: () => {},
-  }
-];
-
 export default function ProjectCard({ project, showOptions }) {
+  const navigate = useNavigate();
 
   return (
     <div className="project-card">
@@ -38,8 +22,33 @@ export default function ProjectCard({ project, showOptions }) {
         </div>
       </div>
       <div className="project-card-description">Bridge + EVM Scaling Solution for Ethereum.</div>
-      <span className="tag">Event</span>
-      {showOptions && <MoreOptions options={options} />}
+      <span className="tag">EVENT SOON</span>
+      {showOptions && <MoreOptions options={[
+        {
+          text: "View Project",
+          method: () => {
+            navigate("/project/1");
+          },
+        },
+        {
+          text: "Update Project",
+          method: () => {
+            navigate("/project/1/update");
+          },
+        },
+        {
+          text: "Create Event",
+          method: () => {
+            navigate("/create-event");
+          },
+        },
+        {
+          text: "Delete Project",
+          method: () => {
+            console.log("Delete Project")
+          },
+        }
+      ]} />}
     </div>
   );
 }

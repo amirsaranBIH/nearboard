@@ -16,8 +16,8 @@ export default function MoreOptions({ options }) {
       <img src={moreIcon} alt="more icon" />
       {showOptions && 
       <div className="more-options">
-        {options.map(option => {
-          return <div onClick={option.method}>{option.text}</div>
+        {options.map((option, i) => {
+          return <div key={i} onClick={option.method}>{option.text}</div>;
         })}
       </div>}
     </div>
