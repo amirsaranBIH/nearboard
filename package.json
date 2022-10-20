@@ -10,11 +10,13 @@
     "build:contract": "cd contract && npm run build",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "cd contract && npm test",
-    "test:integration": "cd integration-tests && npm test -- -- \"./contract/build/hello_near.wasm\"",
+    "test:integration": "cd integration-tests && npm test -- -- \"./contract/build/nearboard.wasm\"",
     "postinstall": "cd frontend && npm install && cd .. && cd integration-tests && npm install && cd .. && cd contract && npm install"
   },
   "devDependencies": {
     "near-cli": "^3.3.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "ava": "^4.3.3"
+  }
 }

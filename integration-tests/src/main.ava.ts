@@ -14,13 +14,13 @@ test.beforeEach(async (t) => {
   const root = worker.rootAccount;
   const contract = await root.createSubAccount('test-account');
   // Get wasm file path from package.json test script in folder above
-  await contract.deploy(
+  const nearboard = await contract.devDeploy(
     process.argv[2],
   );
 
   // Save state for test runs, it is unique for each test
   t.context.worker = worker;
-  t.context.accounts = { root, contract };
+  t.context.accounts = { root, contract, nearboard };
 });
 
 test.afterEach.always(async (t) => {
@@ -30,15 +30,20 @@ test.afterEach.always(async (t) => {
   });
 });
 
-test('returns the default greeting', async (t) => {
-  const { contract } = t.context.accounts;
-  const message: string = await contract.view('get_greeting', {});
-  t.is(message, 'Hello');
+test('returns all projects', async (t) => {
+  const { nearboard } = t.context.accounts;
+  const projects = await nearboard.view('getAllProjects', {});
+  t.is(projects, []);
 });
 
-test('changes the message', async (t) => {
-  const { root, contract } = t.context.accounts;
-  await root.call(contract, 'set_greeting', { message: 'Howdy' });
-  const message: string = await contract.view('get_greeting', {});
-  t.is(message, 'Howdy');
+test('creates a project', async (t) => {
+  const { root, nearboard } = t.context.accounts;
+  const createdProjectId = await root.call(nearboard, 'createProject', {
+    name: "Project name",
+    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    websiteUrl: "http://aurora.dev",
+    logoUrl: "https://s2.coinmarketcap.com/static/img/coins/200x200/14803.png",
+  });
+  const project: any = await nearboard.view('getProject', { projectId: createdProjectId });
+  t.is(project.id, createdProjectId);
 });
