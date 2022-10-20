@@ -16,7 +16,5 @@
   "devDependencies": {
     "near-cli": "^3.3.0"
   },
-  "dependencies": {
-    "ava": "^4.3.3"
-  }
+  "dependencies": {}
 }
