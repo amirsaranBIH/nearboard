@@ -8,19 +8,30 @@ import MainHeading from '../partials/MainHeading/MainHeading';
 import ExternalLink from '../partials/ExternalLink/ExternalLink';
 import ProjectCard from '../partials/ProjectCard/ProjectCard';
 import NearboardContext from '../../store/NearboardContext';
+import SearchProjectsSection from '../sections/SearchProjectsSection/SearchProjectsSection';
+import ProjectsListSection from '../sections/ProjectsListSection/ProjectsListSection';
+
+import projectsIcon from "../../assets/icons/projects.svg"
 
 import './Profile.css';
 
 export default function Profile() {
   const nearboardContext = useContext(NearboardContext);
-
-  const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
+
+  const [allProjects, setAllProjects] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [projectFollows, setProjectFollows] = useState([]);
+  
 
   useEffect(() => {
     nearboardContext.contract.getUserProjects(nearboardContext.wallet.accountId).then(res => {
+      setAllProjects(res);
       setProjects(res);
     })
+    nearboardContext.contract.getUserFollows(nearboardContext.wallet.accountId).then(res => {
+      setProjectFollows(res);
+    });
   }, []);
 
   function switchWallet() {
@@ -63,6 +74,14 @@ export default function Profile() {
     ]
   }
 
+  function onFollow(project) {
+    setProjectFollows(projectFollows.concat([project]));
+  }
+
+  function onUnfollow(project) {
+    setProjectFollows(projectFollows.filter(follow => follow.id !== project.id));
+  }
+
   return (
     <div>
       <div className="wrapper">
@@ -78,6 +97,14 @@ export default function Profile() {
               <button className="btn btn--secondary" onClick={signOut}>Log out</button>
             </div>
           </div>
+          <SearchProjectsSection projects={allProjects} setProjects={setProjects} />
+          <div className="section">
+            <div className="heading">
+              <img src={projectsIcon} alt="four boxes icon" />
+              <span>Projects You Follow</span>
+            </div>
+            <ProjectsListSection projects={projectFollows} />
+          </div>
           <FaqSection />
         </aside>
         <main className="main">
@@ -86,7 +113,7 @@ export default function Profile() {
             {projects.length > 0 ? 
             <div className="my-projects">
               {projects.map(project => {
-                return <ProjectCard key={project.id} project={project} options={getProjectOptions(project)} />
+                return <ProjectCard key={project.id} project={project} options={getProjectOptions(project)} onFollow={onFollow} onUnfollow={onUnfollow} />
               })}
             </div>
             : <div className="no-content">No projects created</div>}

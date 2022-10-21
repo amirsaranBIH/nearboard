@@ -3,7 +3,8 @@ import NearboardContext from '../../store/NearboardContext';
 import MainHeading from '../partials/MainHeading/MainHeading';
 import ProjectCard from '../partials/ProjectCard/ProjectCard';
 import FaqSection from '../sections/FaqSection/FaqSection';
-import SearchQuestionsSection from '../sections/SearchQuestionsSection/SearchQuestionsSection';
+import PreviousEventsSection from '../sections/PreviousEventsSection/PreviousEventsSection';
+import SearchProjectsSection from '../sections/SearchProjectsSection/SearchProjectsSection';
 import UpcomingEventsSection from '../sections/UpcomingEventsSection/UpcomingEventsSection';
 
 import './Projects.css';
@@ -12,10 +13,12 @@ export default function Projects() {
   const nearboardContext = useContext(NearboardContext);
 
   const [projects, setProjects] = useState([]);
+  const [allProjects, setAllProjects] = useState([]);
 
   useEffect(() => {
     nearboardContext.contract.getProjects().then(res => {
       setProjects(res);
+      setAllProjects(res);
     });
   }, []);
 
@@ -23,8 +26,9 @@ export default function Projects() {
     <div>
       <div className="wrapper">
         <aside className="aside">
-          <SearchQuestionsSection />
+          <SearchProjectsSection projects={allProjects} setProjects={setProjects} />
           <UpcomingEventsSection />
+          <PreviousEventsSection />
           <FaqSection />
         </aside>
         <main className="main">

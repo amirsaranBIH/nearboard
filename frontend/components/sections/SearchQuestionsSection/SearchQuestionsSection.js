@@ -16,7 +16,7 @@ export default function SearchQuestionsSection({ questions, setQuestions }) {
           <img src={searchIcon} alt="search icon" />
           <span>Search questions</span>
       </div>
-      <input className="input" type="text" placeholder="Type in your Question" onInput={filterQuestions} />
+      <input className="input" type="text" placeholder="Type in your question" onInput={filterQuestions} />
     </div>
   );
 }

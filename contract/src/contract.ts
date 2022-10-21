@@ -1,4 +1,4 @@
-import { NearBindgen, near, call, view, UnorderedMap } from 'near-sdk-js';
+import { NearBindgen, near, call, view, UnorderedMap, UnorderedSet } from 'near-sdk-js';
 import { AccountId } from 'near-sdk-js/lib/types';
 
 const CREATE_PROJECT_MINIMUM_NEAR = 100_000_000_000_000_000_000_000_000; // 100 NEAR
@@ -54,6 +54,8 @@ class Nearboard {
   events = new UnorderedMap<Event>("e");
   questions = new UnorderedMap<Question>("q");
 
+  follows = new UnorderedSet<string>("f");
+
   @view({})
   getProject({ projectId }): Project {
     return this.projects.get(projectId);
@@ -95,29 +97,43 @@ class Nearboard {
   }
   
   @view({})
-  getAllUpcomingEvents(): Event[] {
-    return this.events.toArray().map(x => x[1]).filter(event => event.startDate < near.blockTimestamp());
-  }
-
-  @view({})
-  getAllPreviousEvents(): Event[] {
-    return this.events.toArray().map(x => x[1]).filter(event => event.startDate >= near.blockTimestamp());
+  getThreeUpcomingEvents(): Event[] {
+    const timestamp = near.blockTimestamp().toString();
+    return this.events.toArray().map(x => x[1]).filter(event => event.startDate.toString() >= timestamp).slice(0, 3);
   }
 
   @view({})
   getProjectUpcomingEvents({ projectId }): Event[] {
-    return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate < near.blockTimestamp());
+    const timestamp = near.blockTimestamp().toString();
+    return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate.toString() >= timestamp);
+  }
+
+  @view({})
+  getProjectUpcomingEvent({ projectId }): Event {
+    const timestamp = near.blockTimestamp().toString();
+    const events = this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate.toString() >= timestamp);
+
+    if (events.length < 1) {
+      return null;
+    }
+
+    events.sort((a, b) => {
+      return a.startDate - b.startDate;
+    });
+
+    return events[0];
   }
 
   @view({})
   getProjectUpcomingEventQuestions({ projectId }): Question[] {
-    const events = this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate < near.blockTimestamp());
+    const timestamp = near.blockTimestamp().toString();
+    const events = this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate.toString() >= timestamp);
 
     if (events.length < 1) {
       return [];
     }
 
-    events.sort((a: Event, b: Event) => {
+    events.sort((a, b) => {
       return a.startDate - b.startDate;
     });
 
@@ -126,15 +142,22 @@ class Nearboard {
 
   @view({})
   getProjectPreviousEvents({ projectId }): Event[] {
-    return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate >= near.blockTimestamp());
+    const timestamp = near.blockTimestamp().toString();
+    return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate.toString() < timestamp);
+  }
+
+  @view({})
+  getThreePreviousEvents(): Event[] {
+    const timestamp = near.blockTimestamp().toString();
+    return this.events.toArray().map(x => x[1]).filter(event => event.startDate.toString() < timestamp).slice(0, 3);
   }
   
   @view({})
   getPopularQuestions(): Question[] {
     const questions = this.questions.toArray().map(x => x[1]);
 
-    questions.sort((a: Question, b: Question) => {
-      return a.votes.length - b.votes.length;
+    questions.sort((a, b) => {
+      return b.votes.length - a.votes.length;
     });
 
     questions.slice(0, 100);
@@ -145,6 +168,34 @@ class Nearboard {
         event: this.events.get(question.eventId),
       }
     });
+  }
+
+  @view({})
+  getTopFivePopularProjects(): Project[] {
+    const projectFollowerCounts = this.projects.toArray().map(([id]) => {
+      return {
+        id,
+        followers: this.getProjectFollowers({ projectId: id }).length,
+      }
+    });
+
+    projectFollowerCounts.sort((a, b) => {
+      return b.followers - a.followers;
+    });
+
+    return projectFollowerCounts.splice(0, 5).map(x => this.getProject({ projectId: x.id }));
+  }
+
+  @view({})
+  getUserFollows({ accountId }): Project[] {
+    return this.follows.toArray().filter(follow => follow.split(":")[0] === accountId).map(follow => {
+      return this.projects.get(follow.split(":")[1]);
+    });
+  }
+
+  @view({})
+  getProjectFollowers({ projectId }): string[] {
+    return this.follows.toArray().filter(follow => follow.split(":")[1] === projectId).map(follow => follow.split(":")[0]);
   }
 
   isUrl(url: string) {
@@ -359,5 +410,15 @@ class Nearboard {
     const question = this.questions.get(questionId);
     question.votes = question.votes.filter(vote => vote.voter !== near.signerAccountId());
     this.questions.set(question.id, question);
+  }
+
+  @call({})
+  followProject({ projectId }) {
+    this.follows.set(near.signerAccountId() + ":" + projectId);
+  }
+
+  @call({})
+  unfollowProject({ projectId }) {
+    this.follows.remove(near.signerAccountId() + ":" + projectId);
   }
 }

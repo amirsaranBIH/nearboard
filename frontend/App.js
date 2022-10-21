@@ -43,13 +43,13 @@ export default function App() {
         <Route path="/projects" element={<Projects />} />
         <Route path="/events" element={<Events />} />
         <Route path="/event/:eventId" element={<Event />} />
-        <Route path="/event/:eventId/update" element={<UpdateEvent />} />
+        <Route path="/event/:eventId/update" element={nearboardContext.isSignedIn ? <UpdateEvent /> : <Navigate to="/" />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/profile" element={nearboardContext.isSignedIn ? <Profile /> : <Navigate to="/" />} />
         <Route path="/project/:id" element={<Project />} />
-        <Route path="/create-project" element={<CreateProject />} />
-        <Route path="/project/:id/update" element={<UpdateProject />} />
-        <Route path="/project/:id/create-event" element={<CreateEvent />} />
+        <Route path="/create-project" element={nearboardContext.isSignedIn ? <CreateProject /> : <Navigate to="/" />} />
+        <Route path="/project/:id/update" element={nearboardContext.isSignedIn ? <UpdateProject /> : <Navigate to="/" />} />
+        <Route path="/project/:id/create-event" element={nearboardContext.isSignedIn ? <CreateEvent /> : <Navigate to="/" />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>

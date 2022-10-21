@@ -13,10 +13,6 @@
     font-size: 20px;
 }
 
-.project-card-description {
-    margin: .75em 0;
-}
-
 .more {
     display: flex;
     justify-content: flex-end;
@@ -24,4 +20,12 @@
 
 .more img {
     margin-bottom: -15px;
+}
+
+.project-followers {
+    display: flex;
+    align-items: center;
+    gap: .5em;
+    justify-content: space-between;
+    margin-top: .5em;
 }

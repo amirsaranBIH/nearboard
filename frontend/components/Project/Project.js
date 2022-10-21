@@ -7,8 +7,8 @@ import MainHeading from '../partials/MainHeading/MainHeading';
 import ProjectCard from '../partials/ProjectCard/ProjectCard';
 import Question from '../partials/Question/Question';
 import FaqSection from '../sections/FaqSection/FaqSection';
+import PreviousEventsSection from '../sections/PreviousEventsSection/PreviousEventsSection';
 import SearchQuestionsSection from '../sections/SearchQuestionsSection/SearchQuestionsSection';
-import UpcomingEventsSection from '../sections/UpcomingEventsSection/UpcomingEventsSection';
 
 import './Project.css';
 
@@ -25,7 +25,7 @@ export default function Project() {
   useEffect(() => {
     nearboardContext.contract.getProject(id).then(res => {
       setProject(res);
-      nearboardContext.contract.getEvent(res.id).then(res => {
+      nearboardContext.contract.getProjectUpcomingEvent(res.id).then(res => {
         setUpcomingEvent(res);
       });
     });
@@ -47,19 +47,23 @@ export default function Project() {
             <ProjectCard project={project} />
           </div>
           <SearchQuestionsSection questions={allUpcomingEventQuestions} setQuestions={setUpcomingEventQuestions} />
-          <UpcomingEventsSection />
+          <PreviousEventsSection />
           <FaqSection />
         </aside>
         <main className="main">
+          {upcomingEvent ?
           <div className="section">
-            <MainHeading heading={"Questions For AMA Tuesday Event"} tooltip={"Top questions will be answered on the AMA Tuesday event"} />
+            <MainHeading heading={"Questions For " + upcomingEvent.name  + " Event"} tooltip={"Top questions will be answered on the upcoming " + upcomingEvent.name  + " event"} />
             <AskQuestion projectId={project.id} eventId={upcomingEvent.id} />
             <div className="questions">
               {upcomingEventQuestions.length > 0 ? upcomingEventQuestions.map(question => {
                 return <Question key={question.id} question={question} event={upcomingEvent} />
               }) : <div className="no-content">No questions asked</div>}
             </div>
-          </div>
+          </div> :
+          <div className="section">
+            <div className="no-content">No upcoming events to ask questions for</div>
+          </div>}
         </main>
       </div>
     </div>

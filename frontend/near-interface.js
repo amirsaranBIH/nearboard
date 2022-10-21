@@ -36,12 +36,16 @@ export class Nearboard {
     return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getPopularQuestions' });
   }
 
-  async getAllUpcomingEvents() {
-    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getAllUpcomingEvents' });
+  async getThreeUpcomingEvents() {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getThreeUpcomingEvents' });
   }
 
   async getProjectEvents(projectId) {
     return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getProjectEvents', args: { projectId } });
+  }
+
+  async getProjectUpcomingEvent(projectId) {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getProjectUpcomingEvent', args: { projectId } });
   }
 
   async getProjectUpcomingEventQuestions(projectId) {
@@ -54,6 +58,22 @@ export class Nearboard {
 
   async getEvent(eventId) {
     return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getEvent', args: { eventId } });
+  }
+
+  async getThreePreviousEvents() {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getThreePreviousEvents' });
+  }
+
+  async getProjectFollowers(projectId) {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getProjectFollowers', args: { projectId } });
+  }
+
+  async getUserFollows(accountId) {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getUserFollows', args: { accountId } });
+  }
+
+  async getTopFivePopularProjects() {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getTopFivePopularProjects' });
   }
 
   // CALL METHODS
@@ -92,5 +112,13 @@ export class Nearboard {
 
   async unvote(questionId) {
     return await this.callMethod({ contractId: this.contractId, method: 'unvote', args: { questionId } });
+  }
+
+  async followProject(projectId) {
+    return await this.callMethod({ contractId: this.contractId, method: 'followProject', args: { projectId } });
+  }
+
+  async unfollowProject(projectId) {
+    return await this.callMethod({ contractId: this.contractId, method: 'unfollowProject', args: { projectId } });
   }
 }

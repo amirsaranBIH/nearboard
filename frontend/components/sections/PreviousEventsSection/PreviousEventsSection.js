@@ -2,19 +2,19 @@ import React, { useEffect, useState, useContext } from 'react';
 
 import { Link } from 'react-router-dom';
 
-import calendarIcon from "../../../assets/icons/calendar.svg"
+import calendarTickIcon from "../../../assets/icons/calendartick.svg"
 import NearboardContext from '../../../store/NearboardContext';
 import EventCard from '../../partials/EventCard/EventCard';
 
-import './UpcomingEventsSection.css';
+import './PreviousEventsSection.css';
 
-export default function UpcomingEventsSection() {
+export default function PreviousEventsSection() {
   const nearboardContext = useContext(NearboardContext);
 
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    nearboardContext.contract.getThreeUpcomingEvents().then(res => {
+    nearboardContext.contract.getThreePreviousEvents().then(res => {
       setEvents(res);
     });
   }, []);
@@ -22,13 +22,13 @@ export default function UpcomingEventsSection() {
   return (
     <div className="section">
         <div className="heading">
-            <img src={calendarIcon} alt="calendar icon" />
-            <span>Upcoming Events</span>
+            <img src={calendarTickIcon} alt="calendar icon" />
+            <span>Previous Events</span>
         </div>
-        <div className="upcoming-events">
+        <div className="previous-events">
             {events.length > 0 ? events.map(event => {
               return <EventCard key={event.id} event={event} />
-            }): <div className="no-content">No upcoming events</div>}
+            }): <div className="no-content">No previous events</div>}
         </div>
         <div className="view-more">
             <Link className="link" to="/events">View all</Link>

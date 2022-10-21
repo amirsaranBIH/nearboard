@@ -23,6 +23,10 @@
     color: var(--primary);
 }
 
+.event-date-day.previous-event {
+    color: var(--secondary);
+}
+
 .event-info {
     display: flex;
     flex-direction: column;

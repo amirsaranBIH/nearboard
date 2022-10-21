@@ -50,7 +50,7 @@ export default function EventCard({ event, options }) {
       <div className="event-top">
       <div className="event-date">
           <span className="event-date-month">{getMonth(event.startDate)}</span>
-          <span className="event-date-day">{getDay(event.startDate)}</span>
+          <span className={"event-date-day " + (event.startDate < new Date().getTime() ? "previous-event" : "")}>{getDay(event.startDate)}</span>
       </div>
       <div className="event-info">
           <span className="event-name"><Link to={"/event/" + event.id}>{event.name}</Link></span>
