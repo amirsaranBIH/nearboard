@@ -1,9 +1,17 @@
 /* Talking with a contract often involves transforming data, we recommend you to encapsulate that logic into a class */
 
 export class Nearboard {
-  constructor({ contractId, walletToUse }) {
+  constructor({ contractId, walletToUse, loadingContext }) {
     this.contractId = contractId;
-    this.wallet = walletToUse;    
+    this.wallet = walletToUse;
+    this.loadingContext = loadingContext; 
+  }
+
+  async callMethod(options) {
+    this.loadingContext.setIsLoading(true);
+    const res = await this.wallet.callMethod(options);
+    this.loadingContext.setIsLoading(false);
+    return res;
   }
 
   // VIEW METHODS
@@ -51,38 +59,38 @@ export class Nearboard {
   // CALL METHODS
 
   async createProject(args) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'createProject', args });
+    return await this.callMethod({ contractId: this.contractId, method: 'createProject', args });
   }
 
   async updateProject(args) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'updateProject', args });
+    return await this.callMethod({ contractId: this.contractId, method: 'updateProject', args });
   }
 
   async deleteProject(projectId) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'deleteProject', args: { projectId } });
+    return await this.callMethod({ contractId: this.contractId, method: 'deleteProject', args: { projectId } });
   }
 
   async createEvent(args) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'createEvent', args });
+    return await this.callMethod({ contractId: this.contractId, method: 'createEvent', args });
   }
 
   async updateEvent(args) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'updateEvent', args });
+    return await this.callMethod({ contractId: this.contractId, method: 'updateEvent', args });
   }
 
   async deleteEvent(eventId) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'deleteEvent', args: { eventId } });
+    return await this.callMethod({ contractId: this.contractId, method: 'deleteEvent', args: { eventId } });
   }
 
   async createQuestion(args) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'createQuestion', args });
+    return await this.callMethod({ contractId: this.contractId, method: 'createQuestion', args });
   }
 
   async vote(questionId) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'vote', args: { questionId } });
+    return await this.callMethod({ contractId: this.contractId, method: 'vote', args: { questionId } });
   }
 
   async unvote(questionId) {
-    return await this.wallet.callMethod({ contractId: this.contractId, method: 'unvote', args: { questionId } });
+    return await this.callMethod({ contractId: this.contractId, method: 'unvote', args: { questionId } });
   }
 }

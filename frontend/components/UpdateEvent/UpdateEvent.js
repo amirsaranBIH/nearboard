@@ -16,9 +16,9 @@ export default function UpdateEvent() {
   const [event, setEvent] = useState({});
 
   useEffect(() => {
-    nearboardContext.Nearboard.getEvent(eventId).then(res => {
+    nearboardContext.contract.getEvent(eventId).then(res => {
       setEvent(res);
-      nearboardContext.Nearboard.getProject(res.projectId).then(res => {
+      nearboardContext.contract.getProject(res.projectId).then(res => {
         setProject(res);
       });
     });
@@ -43,7 +43,7 @@ export default function UpdateEvent() {
   function onSubmitHandler(e) {
     e.preventDefault();
 
-    nearboardContext.Nearboard.updateEvent(event).then(res => {
+    nearboardContext.contract.updateEvent(event).then(res => {
       console.log(res)
     });
   }

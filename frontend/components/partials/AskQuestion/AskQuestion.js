@@ -9,7 +9,7 @@ export default function AskQuestion({ projectId, eventId }) {
   const askQuestionInputRef = useRef(null);
 
   function createQuestion() {
-    nearboardContext.Nearboard.createQuestion({ projectId, eventId, question: askQuestionInputRef.current.value }).then(res => {
+    nearboardContext.contract.createQuestion({ projectId, eventId, question: askQuestionInputRef.current.value }).then(res => {
       console.log(res);
     });
   }

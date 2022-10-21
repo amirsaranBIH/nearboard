@@ -14,7 +14,7 @@ export default function Projects() {
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    nearboardContext.Nearboard.getProjects().then(res => {
+    nearboardContext.contract.getProjects().then(res => {
       setProjects(res);
     });
   }, []);
@@ -30,11 +30,12 @@ export default function Projects() {
         <main className="main">
           <div className="section">
             <MainHeading heading={"All Projects"} tooltip={"List of all projects that create events"} />
-            <div className="all-projects">
+            {projects.length > 0 ? <div className="all-projects">
               {projects.map(project => {
                 return <ProjectCard key={project.id} project={project} />
               })}
-            </div>
+            </div> 
+            : <div className="no-content">No projects created</div>}
           </div>
         </main>
       </div>

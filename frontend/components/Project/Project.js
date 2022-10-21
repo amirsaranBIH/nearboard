@@ -23,13 +23,13 @@ export default function Project() {
   const [upcomingEventQuestions, setUpcomingEventQuestions] = useState([]);
 
   useEffect(() => {
-    nearboardContext.Nearboard.getProject(id).then(res => {
+    nearboardContext.contract.getProject(id).then(res => {
       setProject(res);
-      nearboardContext.Nearboard.getEvent(res.id).then(res => {
+      nearboardContext.contract.getEvent(res.id).then(res => {
         setUpcomingEvent(res);
       });
     });
-    nearboardContext.Nearboard.getProjectUpcomingEventQuestions(id).then(res => {
+    nearboardContext.contract.getProjectUpcomingEventQuestions(id).then(res => {
       setUpcomingEventQuestions(res);
       setAllUpcomingEventQuestions(res);
     });
@@ -55,9 +55,9 @@ export default function Project() {
             <MainHeading heading={"Questions For AMA Tuesday Event"} tooltip={"Top questions will be answered on the AMA Tuesday event"} />
             <AskQuestion projectId={project.id} eventId={upcomingEvent.id} />
             <div className="questions">
-              {upcomingEventQuestions.map(question => {
+              {upcomingEventQuestions.length > 0 ? upcomingEventQuestions.map(question => {
                 return <Question key={question.id} question={question} event={upcomingEvent} />
-              })}
+              }) : <div className="no-content">No questions asked</div>}
             </div>
           </div>
         </main>

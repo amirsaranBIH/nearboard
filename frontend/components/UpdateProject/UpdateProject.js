@@ -20,10 +20,10 @@ export default function UpdateProject() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    nearboardContext.Nearboard.getProject(id).then(res => {
+    nearboardContext.contract.getProject(id).then(res => {
       setProject(res);
 
-      nearboardContext.Nearboard.getProjectEvents(res.id).then(res => {
+      nearboardContext.contract.getProjectEvents(res.id).then(res => {
         setEvents(res);
       });
     });
@@ -48,13 +48,13 @@ export default function UpdateProject() {
   function onSubmitHandler(e) {
     e.preventDefault();
 
-    nearboardContext.Nearboard.updateProject(project).then(res => {
+    nearboardContext.contract.updateProject(project).then(res => {
       console.log(res)
     });
   }
 
   function deleteProject() {
-    nearboardContext.Nearboard.deleteProject(project.id).then(res => {
+    nearboardContext.contract.deleteProject(project.id).then(res => {
       navigate("/profile");
     });
   }
@@ -70,7 +70,7 @@ export default function UpdateProject() {
       {
         text: "Delete",
         method: () => {
-          nearboardContext.Nearboard.deleteEvent(event.id).then(res => {
+          nearboardContext.contract.deleteEvent(event.id).then(res => {
             setEvents(events.filter(e => e.id !== event.id));
           });
         },
@@ -101,11 +101,11 @@ export default function UpdateProject() {
               </div>
             </form>
             <MainHeading heading={"Aurora Events"} tooltip={"Create and update event information"} />
-            <div className="events">
+            {events.length > 0 ? <div className="events">
               {events.map(event => {
                 return <EventCard key={event.id} event={event} options={getEventOptions(event)} />;
               })}
-            </div>
+            </div> : <div className="no-content">No events created</div>}
             <Link to={`/project/${project.id}/create-event`}><button className="btn">+ CREATE EVENT</button></Link>
           </div>
         </main>

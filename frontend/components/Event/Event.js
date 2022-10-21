@@ -21,10 +21,10 @@ export default function Event() {
   const [questions, setQuestions] = useState([])
 
   useEffect(() => {
-    nearboardContext.Nearboard.getEvent(eventId).then(res => {
+    nearboardContext.contract.getEvent(eventId).then(res => {
       setEvent(res);
     });
-    nearboardContext.Nearboard.getEventQuestions(eventId).then(res => {
+    nearboardContext.contract.getEventQuestions(eventId).then(res => {
       setAllQuestions(res);
       setQuestions(res);
     });
@@ -50,9 +50,9 @@ export default function Event() {
             <MainHeading heading={"Questions for " + event.name + " Event"} tooltip={"Top questions will be answered on the " + event.name + " event"} />
             <AskQuestion projectId={event.projectId} eventId={eventId} />
             <div className="questions">
-              {questions.map(question => {
+              {qustions.length > 0 ? questions.map(question => {
                 return <Question key={question.id} question={question} event={event} />;
-              })}
+              }): <div className="no-content">No questions asked</div>}
             </div>
           </div>
         </main>

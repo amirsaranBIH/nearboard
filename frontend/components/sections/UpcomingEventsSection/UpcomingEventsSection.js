@@ -14,7 +14,7 @@ export default function UpcomingEventsSection() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    nearboardContext.Nearboard.getAllUpcomingEvents().then(res => {
+    nearboardContext.contract.getAllUpcomingEvents().then(res => {
       setEvents(res);
     });
   }, []);
@@ -26,9 +26,9 @@ export default function UpcomingEventsSection() {
             <span>Upcoming Events</span>
         </div>
         <div className="upcoming-events">
-            {events.map(event => {
+            {events.length > 0 ? events.map(event => {
               return <EventCard key={event.id} event={event} />
-            })}
+            }): <div className="no-content">No upcoming events</div>}
         </div>
         <div className="view-more">
             <Link className="link" to="/events">View more</Link>

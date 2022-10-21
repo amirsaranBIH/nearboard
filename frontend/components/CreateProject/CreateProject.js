@@ -26,7 +26,7 @@ export default function CreateProject() {
       logoUrl: projectLogoImageUrlInputRef.current.value,
     };
 
-    nearboardContext.Nearboard.createProject(data).then(res => {
+    nearboardContext.contract.createProject(data).then(res => {
       navigate(`/project/${res}/update`);
     });
   }

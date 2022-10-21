@@ -14,7 +14,7 @@ export default function Events() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    nearboardContext.Nearboard.getAllEvents().then(res => {
+    nearboardContext.contract.getAllEvents().then(res => {
       setEvents(res);
     });
   }, []);
@@ -30,11 +30,13 @@ export default function Events() {
         <main className="main">
           <div className="section">
             <MainHeading heading={"Upcoming Events"} tooltip={"List of all upciming events where you can ask questions"} />
-            <div className="events">
-              {events && events.map(event => {
-                return <EventCard key={event.id} event={event} />;
-              })}
-            </div>
+            {events && events.length > 0 ? 
+              <div className="events">
+                {events.map(event => {
+                  return <EventCard key={event.id} event={event} />;
+                })}
+              </div>
+            : <div className="no-content">No upcoming events</div>}
           </div>
         </main>
       </div>

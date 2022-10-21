@@ -15,7 +15,7 @@ export default function CreateEvent() {
   const [project, setProject] = useState({});
 
   useEffect(() => {
-    nearboardContext.Nearboard.getProject(id).then(res => {
+    nearboardContext.contract.getProject(id).then(res => {
       setProject(res);
     });
   }, []);
@@ -36,7 +36,7 @@ export default function CreateEvent() {
       eventType: eventTypeInputRef.current.value,
     };
 
-    nearboardContext.Nearboard.createEvent(data).then(res => {
+    nearboardContext.contract.createEvent(data).then(res => {
       navigate(`/project/${id}/update`);
     });
   }

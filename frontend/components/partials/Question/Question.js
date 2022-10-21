@@ -23,13 +23,13 @@ export default function Question({ event, question }) {
   }
 
   function vote() {
-    nearboardContext.Nearboard.vote(question.id).then(res => {
+    nearboardContext.contract.vote(question.id).then(res => {
       console.log(res);
     });
   }
 
   function unvote() {
-    nearboardContext.Nearboard.unvote(question.id).then(res => {
+    nearboardContext.contract.unvote(question.id).then(res => {
       console.log(res);
     });
   }

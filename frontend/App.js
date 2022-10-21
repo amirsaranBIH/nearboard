@@ -12,18 +12,23 @@ import Faq from "./components/Faq/Faq.js";
 import Profile from "./components/Profile/Profile.js";
 import CreateProject from "./components/CreateProject/CreateProject.js";
 import UpdateProject from "./components/UpdateProject/UpdateProject.js";
+import UpdateEvent from './components/UpdateEvent/UpdateEvent.js';
 
 import './assets/global.css';
 import logo from "./assets/nearboard-horizontal.png"
-import UpdateEvent from './components/UpdateEvent/UpdateEvent.js';
+import loaderIcon from "./assets/icons/loader.svg"
+
 import NearboardContext from './store/NearboardContext.js';
+import LoadingContext from './store/LoadingContext.js';
 
 
 export default function App() {
-  const nearboardContext = useContext(NearboardContext)
+  const nearboardContext = useContext(NearboardContext);
+  const loadingContext = useContext(LoadingContext);
 
   return (
     <Router>
+      { loadingContext.isLoading && <div className="loading"><img src={loaderIcon} alt="loader icon" /></div> }
       <header className="header">
         <Link className="logo" to="/"><img src={logo} alt="Nearboard logo" /></Link>
         <nav className="navigation">

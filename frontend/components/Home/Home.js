@@ -16,7 +16,7 @@ export default function Home() {
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    nearboardContext.Nearboard.getPopularQuestions().then(res => {
+    nearboardContext.contract.getPopularQuestions().then(res => {
       setAllQuestions(res);
       setQuestions(res);
     });
@@ -34,9 +34,9 @@ export default function Home() {
           <div className="section">
             <MainHeading heading={"Top Questions"} tooltip={"Top questions from upcoming events"} />
             <div className="questions">
-              {questions.map(question => {
+              {questions.length > 0 ? questions.map(question => {
                 return <Question key={question.id} question={question} event={question.event} />
-              })}
+              }) : <div className="no-content">No questions asked</div>}
             </div>
           </div>
         </main>

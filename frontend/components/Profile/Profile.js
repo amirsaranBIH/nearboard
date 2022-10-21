@@ -18,7 +18,7 @@ export default function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    nearboardContext.Nearboard.getUserProjects(nearboardContext.wallet.accountId).then(res => {
+    nearboardContext.contract.getUserProjects(nearboardContext.wallet.accountId).then(res => {
       setProjects(res);
     })
   }, []);
@@ -55,7 +55,7 @@ export default function Profile() {
       {
         text: "Delete Project",
         method: () => {
-          nearboardContext.Nearboard.deleteProject(project.id).then(res => {
+          nearboardContext.contract.deleteProject(project.id).then(res => {
             setProjects(projects.filter(p => p.id !== project.id))
           });
         },
@@ -83,11 +83,13 @@ export default function Profile() {
         <main className="main">
           <div className="section">
             <MainHeading heading={"My Projects"} tooltip={"List of my projects where I can create events"} />
+            {projects.length > 0 ? 
             <div className="my-projects">
-              {projects.length < 1 ? <span>No projects</span> : projects.map(project => {
+              {projects.map(project => {
                 return <ProjectCard key={project.id} project={project} options={getProjectOptions(project)} />
               })}
             </div>
+            : <div className="no-content">No projects created</div>}
             <Link to="/create-project"><button className="btn">+ CREATE PROJECT</button></Link>
           </div>
         </main>
