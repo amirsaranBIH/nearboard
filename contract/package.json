@@ -5,12 +5,12 @@
   "type": "module",
   "scripts": {
     "build": "./build.sh",
-    "deploy": "./deploy.sh",
+    "deploy": "bash deploy.sh",
     "test": "echo use integration-tests"
   },
   "dependencies": {
     "near-cli": "^3.4.0",
-    "near-sdk-js": "0.5.0-1"
+    "near-sdk-js": "0.6.0-0"
   },
   "devDependencies": {
     "typescript": "^4.7.4"

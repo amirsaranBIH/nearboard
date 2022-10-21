@@ -50,73 +50,73 @@ class Nearboard {
   eventId = 0;
   questionId = 0;
 
-  projects = new UnorderedMap("p");
-  events = new UnorderedMap("e");
-  questions = new UnorderedMap("q");
+  projects = new UnorderedMap<Project>("p");
+  events = new UnorderedMap<Event>("e");
+  questions = new UnorderedMap<Question>("q");
 
   @view({})
-  getProject({ projectId }) {
+  getProject({ projectId }): Project {
     return this.projects.get(projectId);
   }
 
   @view({})
-  getProjects() {
-    return this.projects.toArray();
+  getProjects(): Project[] {
+    return this.projects.toArray().map(x => x[1]);
   }
 
   @view({})
-  getUserProjects({ accountId }) {
-    return this.projects.toArray().filter((project: any) => project.owner === accountId);
+  getUserProjects({ accountId }): Project[] {
+    return this.projects.toArray().map(x => x[1]).filter(project => project.owner === accountId);
   }
   
   @view({})
-  getEvent({ eventId }) {
+  getEvent({ eventId }): Event {
     return this.events.get(eventId);
   }
 
   @view({})
-  getProjectEvents({ projectId }) {
-    return this.events.toArray().filter((event: any) => event.projectId === projectId);
+  getProjectEvents({ projectId }): Event[] {
+    return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId);
   }
 
   @view({})
-  getAllEvents() {
-    return this.events.toArray();
+  getAllEvents(): Event[] {
+    return this.events.toArray().map(x => x[1]);
   }
   
   @view({})
-  getQuestion({ questionId }) {
+  getQuestion({ questionId }): Question {
     return this.questions.get(questionId);
   }
 
   @view({})
-  getQuestions() {
-    return this.questions.toArray();
+  getQuestions(): Question[] {
+    return this.questions.toArray().map(x => x[1]);
   }
   
   @view({})
-  getAllUpcomingEvents() {
-    return this.events.toArray().filter((event: any) => event.startDate < near.blockTimestamp());
+  getAllUpcomingEvents(): Event[] {
+    return this.events.toArray().map(x => x[1]).filter(event => event.startDate < near.blockTimestamp());
   }
 
   @view({})
-  getAllPreviousEvents() {
-    return this.events.toArray().filter((event: any) => event.startDate >= near.blockTimestamp());
+  getAllPreviousEvents(): Event[] {
+    return this.events.toArray().map(x => x[1]).filter(event => event.startDate >= near.blockTimestamp());
   }
 
   @view({})
-  getProjectUpcomingEvents({ projectId }) {
-    return this.events.toArray().filter((event: any) => event.projectId === projectId && event.startDate < near.blockTimestamp());
+  getProjectUpcomingEvents({ projectId }): Event[] {
+    return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate < near.blockTimestamp());
   }
 
   @view({})
-  getProjectPreviousEvents({ projectId }) {
-    return this.events.toArray().filter((event: any) => event.projectId === projectId && event.startDate >= near.blockTimestamp());
+  getProjectPreviousEvents({ projectId }): Event[] {
+    return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate >= near.blockTimestamp());
   }
   
   @view({})
-  getPopularQuestions() {
-    const questions = this.questions.toArray();
+  getPopularQuestions(): Question[] {
+    const questions = this.questions.toArray().map(x => x[1]);
 
     questions.sort((a: any, b: any) => {
       return Object.keys(a.votes).length - Object.keys(b.votes).length;
@@ -186,7 +186,7 @@ class Nearboard {
 
   @call({})
   updateProject({ projectId, name, description, websiteUrl, logoUrl }) {
-    let project = this.projects.get(projectId) as Project;
+    let project = this.projects.get(projectId);
     
     const newProject: Project = {
       id: project.id,
@@ -226,7 +226,7 @@ class Nearboard {
 
   @call({})
   updateEvent({ projectId, eventId, name, eventUrl, startDate, eventType }) {
-    let event = this.events.get(eventId) as Event;
+    let event = this.events.get(eventId);
 
     const newEvent: Event = {
       id: event.id,
@@ -248,8 +248,6 @@ class Nearboard {
 
     this.questionId++;
     const asker = near.signerAccountId();
-
-    let event = this.events.get(eventId) as Event;
     
     const newQuestion: Question = {
       id: this.questionId,
@@ -271,7 +269,7 @@ class Nearboard {
 
   @call({})
   updateQuestion({ eventId, questionId, question }) {
-    let currentQuestion = this.questions.get(questionId) as Question;
+    let currentQuestion = this.questions.get(questionId);
 
     const newQuestion: Question = {
       id: currentQuestion.id,
@@ -290,7 +288,7 @@ class Nearboard {
       throw Error(`Your account balance needs to be minimum ${VOTE_MINIMUM_NEAR} NEAR to vote`);
     }
     
-    const question = this.questions.get(questionId) as Question;
+    const question = this.questions.get(questionId);
 
     const vote: Vote = {
       voter: near.signerAccountId(),
@@ -302,7 +300,7 @@ class Nearboard {
 
   @call({})
   unvote({ questionId }) {
-    const question = this.questions.get(questionId) as Question;
-    question.votes = question.votes.filter((vote: Vote) => vote.voter !== near.signerAccountId());
+    const question = this.questions.get(questionId);
+    question.votes = question.votes.filter(vote => vote.voter !== near.signerAccountId());
   }
 }
