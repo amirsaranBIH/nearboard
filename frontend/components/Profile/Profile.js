@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -7,27 +7,60 @@ import FaqSection from '../sections/FaqSection/FaqSection';
 import MainHeading from '../partials/MainHeading/MainHeading';
 import ExternalLink from '../partials/ExternalLink/ExternalLink';
 import ProjectCard from '../partials/ProjectCard/ProjectCard';
+import NearboardContext from '../../store/NearboardContext';
 
 import './Profile.css';
 
-export default function Profile({ Nearboard, accountId, wallet }) {
+export default function Profile() {
+  const nearboardContext = useContext(NearboardContext);
+
   const [projects, setProjects] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    Nearboard.getUserProjects(accountId).then(res => {
-      console.log(res)
+    nearboardContext.Nearboard.getUserProjects(nearboardContext.wallet.accountId).then(res => {
       setProjects(res);
     })
   }, []);
 
   function switchWallet() {
-    wallet.signIn();
+    nearboardContext.wallet.signIn();
   }
 
   function signOut() {
-    wallet.signOut();
+    nearboardContext.wallet.signOut();
     navigate("/");
+  }
+
+  function getProjectOptions(project) {
+    return [
+      {
+        text: "View Project",
+        method: () => {
+          navigate(`/project/${project.id}`);
+        },
+      },
+      {
+        text: "Update Project",
+        method: () => {
+          navigate(`/project/${project.id}/update`);
+        },
+      },
+      {
+        text: "Create Event",
+        method: () => {
+          navigate(`/project/${project.id}/create-event`);
+        },
+      },
+      {
+        text: "Delete Project",
+        method: () => {
+          nearboardContext.Nearboard.deleteProject(project.id).then(res => {
+            setProjects(projects.filter(p => p.id !== project.id))
+          });
+        },
+      }
+    ]
   }
 
   return (
@@ -39,7 +72,7 @@ export default function Profile({ Nearboard, accountId, wallet }) {
               <img src={profileIcon} alt="profile icon" />
               <span>Logged in as</span>
             </div>
-            <div className="account-id"><ExternalLink to={"https://explorer.testnet.near.org/accounts/" + accountId} /></div>
+            <div className="account-id"><ExternalLink text={nearboardContext.wallet.accountId} to={"https://explorer.testnet.near.org/accounts/" + nearboardContext.wallet.accountId} /></div>
             <div className="profile-button">
               <button className="btn" onClick={switchWallet}>Switch wallet</button>
               <button className="btn btn--secondary" onClick={signOut}>Log out</button>
@@ -52,7 +85,7 @@ export default function Profile({ Nearboard, accountId, wallet }) {
             <MainHeading heading={"My Projects"} tooltip={"List of my projects where I can create events"} />
             <div className="my-projects">
               {projects.length < 1 ? <span>No projects</span> : projects.map(project => {
-                return <ProjectCard key={project.id} project={project} showOptions={true} />
+                return <ProjectCard key={project.id} project={project} options={getProjectOptions(project)} />
               })}
             </div>
             <Link to="/create-project"><button className="btn">+ CREATE PROJECT</button></Link>

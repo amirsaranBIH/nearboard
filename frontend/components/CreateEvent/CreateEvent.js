@@ -1,18 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useRef, useState, useContext } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import NearboardContext from '../../store/NearboardContext';
 import MainHeading from '../partials/MainHeading/MainHeading';
 import ProjectCard from '../partials/ProjectCard/ProjectCard';
 import FaqSection from '../sections/FaqSection/FaqSection';
 
 import './CreateEvent.css';
 
-export default function CreateEvent({ Nearboard }) {
+export default function CreateEvent() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const nearboardContext = useContext(NearboardContext);
 
   const [project, setProject] = useState({});
 
   useEffect(() => {
-    Nearboard.getProject(parseInt(id, 10)).then(res => {
+    nearboardContext.Nearboard.getProject(id).then(res => {
       setProject(res);
     });
   }, []);
@@ -33,8 +36,8 @@ export default function CreateEvent({ Nearboard }) {
       eventType: eventTypeInputRef.current.value,
     };
 
-    Nearboard.createEvent(data).then(res => {
-      console.log(res);
+    nearboardContext.Nearboard.createEvent(data).then(res => {
+      navigate(`/project/${id}/update`);
     });
   }
 

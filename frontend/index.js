@@ -6,6 +6,7 @@ import App from './App';
 // NEAR
 import { Nearboard } from './near-interface';
 import { Wallet } from './near-wallet';
+import { NearboardContextProvider } from './store/NearboardContext';
 
 // When creating the wallet you can optionally ask to create an access key
 // Having the key enables to call non-payable methods without interrupting the user to sign
@@ -20,5 +21,9 @@ window.onload = async () => {
 
   const container = document.getElementById('root');
   const root = createRoot(container);
-  root.render(<App isSignedIn={isSignedIn} Nearboard={nearboard} wallet={wallet} />);
+  root.render(
+  <NearboardContextProvider isSignedInParam={isSignedIn} Nearboard={nearboard} wallet={wallet}>
+    <App />
+  </NearboardContextProvider>
+  );
 }

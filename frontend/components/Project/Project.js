@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import NearboardContext from '../../store/NearboardContext';
 
 import AskQuestion from '../partials/AskQuestion/AskQuestion';
 import MainHeading from '../partials/MainHeading/MainHeading';
@@ -11,23 +12,28 @@ import UpcomingEventsSection from '../sections/UpcomingEventsSection/UpcomingEve
 
 import './Project.css';
 
-export default function Project({ Nearboard }) {
+export default function Project() {
   const { id } = useParams();
 
-  const [project, setProject] = useState(null);
+  const nearboardContext = useContext(NearboardContext);
+
+  const [project, setProject] = useState({});
+  const [upcomingEvent, setUpcomingEvent] = useState({});
+  const [allUpcomingEventQuestions, setAllUpcomingEventQuestions] = useState([]);
+  const [upcomingEventQuestions, setUpcomingEventQuestions] = useState([]);
 
   useEffect(() => {
-    Nearboard.getProject(parseInt(id, 10)).then(res => {
+    nearboardContext.Nearboard.getProject(id).then(res => {
       setProject(res);
+      nearboardContext.Nearboard.getEvent(res.id).then(res => {
+        setUpcomingEvent(res);
+      });
+    });
+    nearboardContext.Nearboard.getProjectUpcomingEventQuestions(id).then(res => {
+      setUpcomingEventQuestions(res);
+      setAllUpcomingEventQuestions(res);
     });
   }, []);
-
-  function getUpcomingEvent() {
-    if (!project) return null;
-    return Object.values(project.events).find(event => event.startDate > (new Date().getTime()));
-  }
-
-  const upcomingEvent = getUpcomingEvent();
 
   if (!project) {
     return null;
@@ -40,16 +46,16 @@ export default function Project({ Nearboard }) {
           <div className="section">
             <ProjectCard project={project} />
           </div>
-          <SearchQuestionsSection />
-          <UpcomingEventsSection Nearboard={Nearboard} />
+          <SearchQuestionsSection questions={allUpcomingEventQuestions} setQuestions={setUpcomingEventQuestions} />
+          <UpcomingEventsSection />
           <FaqSection />
         </aside>
         <main className="main">
           <div className="section">
             <MainHeading heading={"Questions For AMA Tuesday Event"} tooltip={"Top questions will be answered on the AMA Tuesday event"} />
-            <AskQuestion Nearboard={Nearboard} projectId={project.id} eventId={upcomingEvent.id} />
+            <AskQuestion projectId={project.id} eventId={upcomingEvent.id} />
             <div className="questions">
-              {upcomingEvent && Object.values(upcomingEvent.questions).map(question => {
+              {upcomingEventQuestions.map(question => {
                 return <Question key={question.id} question={question} event={upcomingEvent} />
               })}
             </div>

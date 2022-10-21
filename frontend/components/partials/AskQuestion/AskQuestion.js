@@ -1,12 +1,15 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
+import NearboardContext from '../../../store/NearboardContext';
 
 import './AskQuestion.css';
 
-export default function AskQuestion({ Nearboard, projectId, eventId }) {
+export default function AskQuestion({ projectId, eventId }) {
+  const nearboardContext = useContext(NearboardContext);
+
   const askQuestionInputRef = useRef(null);
 
   function createQuestion() {
-    Nearboard.createQuestion({ projectId, eventId, question: askQuestionInputRef.current.value }).then(res => {
+    nearboardContext.Nearboard.createQuestion({ projectId, eventId, question: askQuestionInputRef.current.value }).then(res => {
       console.log(res);
     });
   }

@@ -1,10 +1,16 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import NearboardContext from '../../store/NearboardContext';
 import MainHeading from '../partials/MainHeading/MainHeading';
 import FaqSection from '../sections/FaqSection/FaqSection';
 
 import './CreateProject.css';
 
-export default function CreateProject({ Nearboard }) {
+export default function CreateProject() {
+  const navigate = useNavigate();
+
+  const nearboardContext = useContext(NearboardContext)
+
   const projectNameInputRef = useRef(null);
   const projectDescriptionInputRef = useRef(null);
   const projectWebsiteUrlInputRef = useRef(null);
@@ -20,8 +26,8 @@ export default function CreateProject({ Nearboard }) {
       logoUrl: projectLogoImageUrlInputRef.current.value,
     };
 
-    Nearboard.createProject(data).then(res => {
-      console.log(res);
+    nearboardContext.Nearboard.createProject(data).then(res => {
+      navigate(`/project/${res}/update`);
     });
   }
 

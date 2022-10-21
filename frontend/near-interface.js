@@ -32,8 +32,20 @@ export class Nearboard {
     return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getAllUpcomingEvents' });
   }
 
-  async getEvent({ projectId, eventId }) {
-    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getEvent', args: { projectId, eventId } });
+  async getProjectEvents(projectId) {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getProjectEvents', args: { projectId } });
+  }
+
+  async getProjectUpcomingEventQuestions(projectId) {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getProjectUpcomingEventQuestions', args: { projectId } });
+  }
+
+  async getEventQuestions(eventId) {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getEventQuestions', args: { eventId } });
+  }
+
+  async getEvent(eventId) {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getEvent', args: { eventId } });
   }
 
   // CALL METHODS
@@ -42,11 +54,35 @@ export class Nearboard {
     return await this.wallet.callMethod({ contractId: this.contractId, method: 'createProject', args });
   }
 
+  async updateProject(args) {
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'updateProject', args });
+  }
+
+  async deleteProject(projectId) {
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'deleteProject', args: { projectId } });
+  }
+
   async createEvent(args) {
     return await this.wallet.callMethod({ contractId: this.contractId, method: 'createEvent', args });
   }
 
+  async updateEvent(args) {
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'updateEvent', args });
+  }
+
+  async deleteEvent(eventId) {
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'deleteEvent', args: { eventId } });
+  }
+
   async createQuestion(args) {
     return await this.wallet.callMethod({ contractId: this.contractId, method: 'createQuestion', args });
+  }
+
+  async vote(questionId) {
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'vote', args: { questionId } });
+  }
+
+  async unvote(questionId) {
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'unvote', args: { questionId } });
   }
 }

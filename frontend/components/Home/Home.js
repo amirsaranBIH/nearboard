@@ -1,18 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import FaqSection from "../sections/FaqSection/FaqSection"
 import UpcomingEventsSection from '../sections/UpcomingEventsSection/UpcomingEventsSection';
 import SearchQuestionsSection from '../sections/SearchQuestionsSection/SearchQuestionsSection';
 import MainHeading from '../partials/MainHeading/MainHeading';
 import Question from '../partials/Question/Question';
+import NearboardContext from '../../store/NearboardContext';
 
 import './Home.css';
 
-export default function Home({ Nearboard }) {
+export default function Home() {
+  const nearboardContext = useContext(NearboardContext);
+  
+  const [allQuestions, setAllQuestions] = useState([]);
   const [questions, setQuestions] = useState([]);
 
   useEffect(() => {
-    Nearboard.getPopularQuestions().then(res => {
+    nearboardContext.Nearboard.getPopularQuestions().then(res => {
+      setAllQuestions(res);
       setQuestions(res);
     });
   }, []);
@@ -21,8 +26,8 @@ export default function Home({ Nearboard }) {
     <div>
       <div className="wrapper">
         <aside className="aside">
-          <SearchQuestionsSection />
-          <UpcomingEventsSection Nearboard={Nearboard} />
+          <SearchQuestionsSection questions={allQuestions} setQuestions={setQuestions} />
+          <UpcomingEventsSection />
           <FaqSection />
         </aside>
         <main className="main">

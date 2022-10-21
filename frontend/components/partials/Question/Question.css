@@ -33,6 +33,10 @@
     cursor: pointer;
 }
 
+.question-vote-btn.voted {
+    background-color: var(--primary);
+}
+
 .question-vote-btn img {
     margin: auto;
 }

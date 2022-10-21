@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import { Link } from 'react-router-dom';
 
 import calendarIcon from "../../../assets/icons/calendar.svg"
+import NearboardContext from '../../../store/NearboardContext';
 import EventCard from '../../partials/EventCard/EventCard';
 
 import './UpcomingEventsSection.css';
 
-export default function UpcomingEventsSection({ Nearboard }) {
+export default function UpcomingEventsSection() {
+  const nearboardContext = useContext(NearboardContext);
 
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    Nearboard.getAllUpcomingEvents().then(res => {
-      console.log(res)
+    nearboardContext.Nearboard.getAllUpcomingEvents().then(res => {
       setEvents(res);
     });
   }, []);

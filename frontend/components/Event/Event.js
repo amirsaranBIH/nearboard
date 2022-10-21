@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import NearboardContext from '../../store/NearboardContext';
 import AskQuestion from '../partials/AskQuestion/AskQuestion';
 import EventCard from '../partials/EventCard/EventCard';
 import MainHeading from '../partials/MainHeading/MainHeading';
@@ -10,15 +11,22 @@ import UpcomingEventsSection from '../sections/UpcomingEventsSection/UpcomingEve
 
 import './Event.css';
 
-export default function Event({ Nearboard }) {
-  const { projectId, eventId } = useParams();
+export default function Event() {
+  const { eventId } = useParams();
+
+  const nearboardContext = useContext(NearboardContext);
 
   const [event, setEvent] = useState(null)
+  const [allQuestions, setAllQuestions] = useState([])
+  const [questions, setQuestions] = useState([])
 
   useEffect(() => {
-    Nearboard.getEvent({ projectId, eventId }).then(res => {
-      console.log(res);
+    nearboardContext.Nearboard.getEvent(eventId).then(res => {
       setEvent(res);
+    });
+    nearboardContext.Nearboard.getEventQuestions(eventId).then(res => {
+      setAllQuestions(res);
+      setQuestions(res);
     });
   }, []);
 
@@ -33,16 +41,16 @@ export default function Event({ Nearboard }) {
           <div className="section">
             <EventCard event={event} />
           </div>
-          <SearchQuestionsSection />
-          <UpcomingEventsSection Nearboard={Nearboard} />
+          <SearchQuestionsSection questions={allQuestions} setQuestions={setQuestions} />
+          <UpcomingEventsSection />
           <FaqSection />
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"Questions for AMA Tuesday Event"} tooltip={"Top questions will be answered on the AMA Tuesday event"} />
-            <AskQuestion Nearboard={Nearboard} projectId={projectId} eventId={eventId} />
+            <MainHeading heading={"Questions for " + event.name + " Event"} tooltip={"Top questions will be answered on the " + event.name + " event"} />
+            <AskQuestion projectId={event.projectId} eventId={eventId} />
             <div className="questions">
-              {Object.values(event.questions).map(question => {
+              {questions.map(question => {
                 return <Question key={question.id} question={question} event={event} />;
               })}
             </div>

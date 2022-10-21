@@ -4,6 +4,7 @@
 }
 
 .project-card-image {
+    display: block;
     border-radius: 100px;
     max-width: 60px;
 }

@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import NearboardContext from '../../store/NearboardContext';
 import MainHeading from '../partials/MainHeading/MainHeading';
 import ProjectCard from '../partials/ProjectCard/ProjectCard';
 import FaqSection from '../sections/FaqSection/FaqSection';
@@ -7,12 +8,13 @@ import UpcomingEventsSection from '../sections/UpcomingEventsSection/UpcomingEve
 
 import './Projects.css';
 
-export default function Projects({ Nearboard }) {
+export default function Projects() {
+  const nearboardContext = useContext(NearboardContext);
+
   const [projects, setProjects] = useState([]);
 
   useEffect(() => {
-    Nearboard.getProjects().then(res => {
-      console.log(res)
+    nearboardContext.Nearboard.getProjects().then(res => {
       setProjects(res);
     });
   }, []);
@@ -22,7 +24,7 @@ export default function Projects({ Nearboard }) {
       <div className="wrapper">
         <aside className="aside">
           <SearchQuestionsSection />
-          <UpcomingEventsSection Nearboard={Nearboard} />
+          <UpcomingEventsSection />
           <FaqSection />
         </aside>
         <main className="main">

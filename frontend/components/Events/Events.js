@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import NearboardContext from '../../store/NearboardContext';
 import EventCard from '../partials/EventCard/EventCard';
 import MainHeading from '../partials/MainHeading/MainHeading';
 import FaqSection from '../sections/FaqSection/FaqSection';
@@ -7,11 +8,13 @@ import UpcomingEventsSection from '../sections/UpcomingEventsSection/UpcomingEve
 
 import './Events.css';
 
-export default function Events({ Nearboard }) {
+export default function Events() {
+  const nearboardContext = useContext(NearboardContext);
+
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    Nearboard.getAllEvents().then(res => {
+    nearboardContext.Nearboard.getAllEvents().then(res => {
       setEvents(res);
     });
   }, []);
@@ -21,7 +24,7 @@ export default function Events({ Nearboard }) {
       <div className="wrapper">
         <aside className="aside">
           <SearchQuestionsSection />
-          <UpcomingEventsSection Nearboard={Nearboard} />
+          <UpcomingEventsSection />
           <FaqSection />
         </aside>
         <main className="main">

@@ -14,7 +14,7 @@ enum EventType {
 };
 
 type Project = {
-  id: number;
+  id: string;
   owner: AccountId;
   name: string;
   description: string;
@@ -23,19 +23,19 @@ type Project = {
 };
 
 type Event = {
-  id: number;
+  id: string;
   name: string;
   eventUrl: string;
   startDate: number;
   eventType: EventType;
-  projectId: number;
+  projectId: string;
 };
 
 type Question = {
-  id: number;
+  id: string;
   question: string;
   asker: AccountId;
-  eventId: number;
+  eventId: string;
   votes: Vote[];
 };
 
@@ -90,8 +90,8 @@ class Nearboard {
   }
 
   @view({})
-  getQuestions(): Question[] {
-    return this.questions.toArray().map(x => x[1]);
+  getEventQuestions({ eventId }): Question[] {
+    return this.questions.toArray().map(x => x[1]).filter(question => question.eventId === eventId);
   }
   
   @view({})
@@ -110,6 +110,21 @@ class Nearboard {
   }
 
   @view({})
+  getProjectUpcomingEventQuestions({ projectId }): Question[] {
+    const events = this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate < near.blockTimestamp());
+
+    if (events.length < 1) {
+      return [];
+    }
+
+    events.sort((a: Event, b: Event) => {
+      return a.startDate - b.startDate;
+    });
+
+    return this.questions.toArray().map(x => x[1]).filter(question => question.eventId === events[0].id);
+  }
+
+  @view({})
   getProjectPreviousEvents({ projectId }): Event[] {
     return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate >= near.blockTimestamp());
   }
@@ -118,13 +133,18 @@ class Nearboard {
   getPopularQuestions(): Question[] {
     const questions = this.questions.toArray().map(x => x[1]);
 
-    questions.sort((a: any, b: any) => {
-      return Object.keys(a.votes).length - Object.keys(b.votes).length;
+    questions.sort((a: Question, b: Question) => {
+      return a.votes.length - b.votes.length;
     });
 
     questions.slice(0, 100);
 
-    return questions;
+    return questions.map(question => {
+      return {
+        ...question,
+        event: this.events.get(question.eventId),
+      }
+    });
   }
 
   isUrl(url: string) {
@@ -169,7 +189,7 @@ class Nearboard {
     this.projectId++;
 
     const project: Project = {
-      id: this.projectId,
+      id: this.projectId.toString(),
       owner: near.signerAccountId(),
       name: name,
       description: description,
@@ -185,8 +205,8 @@ class Nearboard {
   }
 
   @call({})
-  updateProject({ projectId, name, description, websiteUrl, logoUrl }) {
-    let project = this.projects.get(projectId);
+  updateProject({ id, name, description, websiteUrl, logoUrl }) {
+    let project = this.projects.get(id);
     
     const newProject: Project = {
       id: project.id,
@@ -203,6 +223,25 @@ class Nearboard {
   }
 
   @call({})
+  deleteProject({ projectId }) {
+    this.projects.remove(projectId.toString());
+
+    const projectEvents = this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId);
+
+    projectEvents.forEach(event => {
+      this.events.remove(event.id);
+    });
+
+    projectEvents.forEach(event => {
+      const eventQuestions = this.questions.toArray().map(x => x[1]).filter(question => question.eventId === event.id);
+      
+      eventQuestions.forEach(question => {
+        this.questions.remove(question.id);
+      });
+    });
+  }
+
+  @call({})
   createEvent({ projectId, name, eventUrl, startDate, eventType }): number {
     if (near.accountBalance() < CREATE_EVENT_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_EVENT_MINIMUM_NEAR} NEAR to create an event`);
@@ -211,7 +250,7 @@ class Nearboard {
     this.eventId++;
     
     const event: Event = {
-      id: this.eventId,
+      id: this.eventId.toString(),
       name: name,
       eventUrl: eventUrl,
       startDate: startDate,
@@ -225,8 +264,8 @@ class Nearboard {
   }
 
   @call({})
-  updateEvent({ projectId, eventId, name, eventUrl, startDate, eventType }) {
-    let event = this.events.get(eventId);
+  updateEvent({ id, name, eventUrl, startDate, eventType }) {
+    let event = this.events.get(id);
 
     const newEvent: Event = {
       id: event.id,
@@ -234,10 +273,21 @@ class Nearboard {
       eventUrl: eventUrl,
       startDate: startDate,
       eventType: eventType,
-      projectId,
+      projectId: event.projectId,
     };
 
-    this.events.set(event.id.toString(), event);
+    this.events.set(event.id.toString(), newEvent);
+  }
+
+  @call({})
+  deleteEvent({ eventId }) {
+    this.events.remove(eventId);
+
+    const eventQuestions = this.questions.toArray().map(x => x[1]).filter(question => question.eventId === eventId);
+      
+    eventQuestions.forEach(question => {
+      this.questions.remove(question.id);
+    });
   }
 
   @call({})
@@ -250,7 +300,7 @@ class Nearboard {
     const asker = near.signerAccountId();
     
     const newQuestion: Question = {
-      id: this.questionId,
+      id: this.questionId.toString(),
       asker,
       question: question,
       eventId,
@@ -268,18 +318,23 @@ class Nearboard {
   }
 
   @call({})
-  updateQuestion({ eventId, questionId, question }) {
-    let currentQuestion = this.questions.get(questionId);
+  updateQuestion({ id, question }) {
+    let currentQuestion = this.questions.get(id);
 
     const newQuestion: Question = {
       id: currentQuestion.id,
       asker: currentQuestion.asker,
       question: question,
-      eventId,
+      eventId: currentQuestion.eventId,
       votes: currentQuestion.votes,
     };
 
     this.questions.set(newQuestion.id.toString(), newQuestion);
+  }
+
+  @call({})
+  deleteQuestion({ questionId }) {
+    this.questions.remove(questionId);
   }
 
   @call({})
@@ -296,11 +351,13 @@ class Nearboard {
     };
 
     question.votes.push(vote);
+    this.questions.set(question.id, question);
   }
 
   @call({})
   unvote({ questionId }) {
     const question = this.questions.get(questionId);
     question.votes = question.votes.filter(vote => vote.voter !== near.signerAccountId());
+    this.questions.set(question.id, question);
   }
 }
