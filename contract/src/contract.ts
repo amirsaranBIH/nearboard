@@ -232,7 +232,7 @@ class Nearboard {
   }
 
   @call({})
-  createProject({ name, description, websiteUrl, logoUrl }): number {
+  createProject({ name, description, websiteUrl, logoUrl }): string {
     if (near.accountBalance() < CREATE_PROJECT_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_PROJECT_MINIMUM_NEAR} yohtoNEAR to create a project`);
     }
@@ -252,7 +252,7 @@ class Nearboard {
 
     this.projects.set(this.projectId.toString(), project);
 
-    return this.projectId;
+    return this.projectId.toString();
   }
 
   @call({})
@@ -293,7 +293,7 @@ class Nearboard {
   }
 
   @call({})
-  createEvent({ projectId, name, eventUrl, startDate, eventType }): number {
+  createEvent({ projectId, name, eventUrl, startDate, eventType }): string {
     if (near.accountBalance() < CREATE_EVENT_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_EVENT_MINIMUM_NEAR} yohtoNEAR to create an event`);
     }
@@ -311,7 +311,7 @@ class Nearboard {
 
     this.events.set(this.eventId.toString(), event);
 
-    return this.eventId;
+    return this.eventId.toString();
   }
 
   @call({})
@@ -342,7 +342,7 @@ class Nearboard {
   }
 
   @call({})
-  createQuestion({ eventId, question }): number {
+  createQuestion({ eventId, question }): string {
     if (near.accountBalance() < CREATE_QUESTION_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_QUESTION_MINIMUM_NEAR} yohtoNEAR to create a question`);
     }
@@ -365,7 +365,7 @@ class Nearboard {
 
     this.questions.set(this.questionId.toString(), newQuestion);
 
-    return this.questionId;
+    return this.questionId.toString();
   }
 
   @call({})
