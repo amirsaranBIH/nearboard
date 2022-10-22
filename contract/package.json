@@ -4,8 +4,8 @@
   "license": "(MIT AND Apache-2.0)",
   "type": "module",
   "scripts": {
-    "build": "./build.sh",
-    "deploy": "bash deploy.sh",
+    "build": "near-sdk-js build src/contract.ts build/nearboard.wasm",
+    "deploy": "npm run build && near dev-deploy --wasmFile build/nearboard.wasm",
     "test": "echo use integration-tests"
   },
   "dependencies": {
