@@ -1,10 +1,10 @@
 import { NearBindgen, near, call, view, UnorderedMap, UnorderedSet } from 'near-sdk-js';
 import { AccountId } from 'near-sdk-js/lib/types';
 
-const CREATE_PROJECT_MINIMUM_NEAR = 100_000_000_000_000_000_000_000_000; // 100 NEAR
-const CREATE_EVENT_MINIMUM_NEAR = 100_000_000_000_000_000_000_000_000; // 100 NEAR
-const CREATE_QUESTION_MINIMUM_NEAR = 10_000_000_000_000_000_000_000_000; // 10 NEAR
-const VOTE_MINIMUM_NEAR = 1_000_000_000_000_000_000_000_000; // 1 NEAR
+const CREATE_PROJECT_MINIMUM_NEAR: bigint = BigInt(100_000_000_000_000_000_000_000_000n); // 100 NEAR
+const CREATE_EVENT_MINIMUM_NEAR: bigint = BigInt(100_000_000_000_000_000_000_000_000n); // 100 NEAR
+const CREATE_QUESTION_MINIMUM_NEAR: bigint = BigInt(10_000_000_000_000_000_000_000_000n); // 10 NEAR
+const VOTE_MINIMUM_NEAR: bigint = BigInt(1_000_000_000_000_000_000_000_000n); // 1 NEAR
 
 enum EventType {
   LiveEvent,
@@ -234,7 +234,7 @@ class Nearboard {
   @call({})
   createProject({ name, description, websiteUrl, logoUrl }): number {
     if (near.accountBalance() < CREATE_PROJECT_MINIMUM_NEAR) {
-      throw Error(`Your account balance needs to be minimum ${CREATE_PROJECT_MINIMUM_NEAR} NEAR to create a project`);
+      throw Error(`Your account balance needs to be minimum ${CREATE_PROJECT_MINIMUM_NEAR} yohtoNEAR to create a project`);
     }
 
     this.projectId++;
@@ -295,7 +295,7 @@ class Nearboard {
   @call({})
   createEvent({ projectId, name, eventUrl, startDate, eventType }): number {
     if (near.accountBalance() < CREATE_EVENT_MINIMUM_NEAR) {
-      throw Error(`Your account balance needs to be minimum ${CREATE_EVENT_MINIMUM_NEAR} NEAR to create an event`);
+      throw Error(`Your account balance needs to be minimum ${CREATE_EVENT_MINIMUM_NEAR} yohtoNEAR to create an event`);
     }
 
     this.eventId++;
@@ -344,7 +344,7 @@ class Nearboard {
   @call({})
   createQuestion({ eventId, question }): number {
     if (near.accountBalance() < CREATE_QUESTION_MINIMUM_NEAR) {
-      throw Error(`Your account balance needs to be minimum ${CREATE_QUESTION_MINIMUM_NEAR} NEAR to create a question`);
+      throw Error(`Your account balance needs to be minimum ${CREATE_QUESTION_MINIMUM_NEAR} yohtoNEAR to create a question`);
     }
 
     this.questionId++;
@@ -391,7 +391,7 @@ class Nearboard {
   @call({})
   vote({ questionId }) {
     if (near.accountBalance() < VOTE_MINIMUM_NEAR) {
-      throw Error(`Your account balance needs to be minimum ${VOTE_MINIMUM_NEAR} NEAR to vote`);
+      throw Error(`Your account balance needs to be minimum ${VOTE_MINIMUM_NEAR} yohtoNEAR to vote`);
     }
     
     const question = this.questions.get(questionId);

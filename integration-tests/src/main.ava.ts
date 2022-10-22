@@ -6,22 +6,16 @@ const test = anyTest as TestFn<{
   accounts: Record<string, NearAccount>;
 }>;
 
-test.beforeEach(async (t) => {
-  // Init the worker and start a Sandbox server
+test.beforeEach(async t => {
   const worker = await Worker.init();
-
-  // Deploy contract
   const root = worker.rootAccount;
-  const contract = await root.createSubAccount('test-account');
-  // Get wasm file path from package.json test script in folder above
-  const nearboard = await contract.devDeploy(
-    process.argv[2],
-  );
+  const contract = await root.devDeploy(process.argv[2]);
+  /* Account that you will be able to use in your tests */
+  const ali = await root.createSubAccount('ali');
 
-  // Save state for test runs, it is unique for each test
   t.context.worker = worker;
-  t.context.accounts = { root, contract, nearboard };
-});
+  t.context.accounts = { contract, ali, root };
+})
 
 test.afterEach.always(async (t) => {
   // Stop Sandbox server
@@ -31,19 +25,23 @@ test.afterEach.always(async (t) => {
 });
 
 test('returns all projects', async (t) => {
-  const { nearboard } = t.context.accounts;
-  const projects = await nearboard.view('getAllProjects', {});
-  t.is(projects, []);
+  const { contract } = t.context.accounts;
+
+  const projects: any = await contract.view('getProjects', {});
+  t.is(projects.length, 0);
 });
 
 test('creates a project', async (t) => {
-  const { root, nearboard } = t.context.accounts;
-  const createdProjectId = await root.call(nearboard, 'createProject', {
+  const { root, contract } = t.context.accounts;
+  const createdProjectId: any = await root.call(contract, 'createProject', {
     name: "Project name",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     websiteUrl: "http://aurora.dev",
     logoUrl: "https://s2.coinmarketcap.com/static/img/coins/200x200/14803.png",
+  }).catch(err => {
+    t.fail(err.message);
   });
-  const project: any = await nearboard.view('getProject', { projectId: createdProjectId });
-  t.is(project.id, createdProjectId);
+
+  const project: any = await contract.view('getProject', { projectId: createdProjectId });
+  t.is(project.id, createdProjectId.toString());
 });
