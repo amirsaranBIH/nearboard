@@ -17,4 +17,4 @@ jobs:
           node-version: "16"
       - run: yarn
       - run: cd contract && yarn build
-      - run: cd integration-tests && ava src/main.ava.ts
+      - run: cd integration-tests && yarn test
