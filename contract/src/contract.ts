@@ -1,48 +1,37 @@
-import { NearBindgen, near, call, view, UnorderedMap, UnorderedSet } from 'near-sdk-js';
-import { AccountId } from 'near-sdk-js/lib/types';
+import { NearBindgen, near, call, view, UnorderedMap, UnorderedSet } from "near-sdk-js";
+import type {
+  CreateEventParams,
+  CreateProjectParams,
+  CreateQuestionParams,
+  DeleteEventParams,
+  DeleteProjectParams,
+  DeleteQuestionParams,
+  FollowProjectParams,
+  GetEventParams,
+  GetEventQuestionsParams,
+  GetProjectEventsParams,
+  GetProjectFollowersParams,
+  GetProjectParams,
+  GetProjectPreviousEventsParams,
+  GetProjectUpcomingEventParams,
+  GetProjectUpcomingEventQuestionsParams,
+  GetProjectUpcomingEventsParams,
+  GetQuestionParams,
+  GetUserFollowsParams,
+  GetUserProjectsParams,
+  UnfollowProjectParams,
+  UnvoteParams,
+  UpdateEventParams,
+  UpdateProjectParams,
+  UpdateQuestionParams,
+  VoteParams
+} from "./params";
+import type { Project, Event, Question, Vote } from "./types";
 
 const CREATE_PROJECT_MINIMUM_NEAR: bigint = BigInt(100_000_000_000_000_000_000_000_000n); // 100 NEAR
 const CREATE_EVENT_MINIMUM_NEAR: bigint = BigInt(100_000_000_000_000_000_000_000_000n); // 100 NEAR
 const CREATE_QUESTION_MINIMUM_NEAR: bigint = BigInt(10_000_000_000_000_000_000_000_000n); // 10 NEAR
 const VOTE_MINIMUM_NEAR: bigint = BigInt(1_000_000_000_000_000_000_000_000n); // 1 NEAR
-
-enum EventType {
-  LiveEvent,
-  OnlineEvent,
-  AMA,
-  Podcast,
-};
-
-type Project = {
-  id: string;
-  owner: AccountId;
-  name: string;
-  description: string;
-  websiteUrl: string;
-  logoUrl: string;
-};
-
-type Event = {
-  id: string;
-  name: string;
-  eventUrl: string;
-  startDate: number;
-  eventType: EventType;
-  projectId: string;
-};
-
-type Question = {
-  id: string;
-  question: string;
-  asker: AccountId;
-  eventId: string;
-  votes: Vote[];
-};
-
-type Vote = {
-  voter: AccountId;
-  nearRepresented: string;
-};
 
 @NearBindgen({})
 class Nearboard {
@@ -57,7 +46,7 @@ class Nearboard {
   follows = new UnorderedSet<string>("f");
 
   @view({})
-  getProject({ projectId }): Project {
+  getProject({ projectId }: GetProjectParams): Project {
     return this.projects.get(projectId);
   }
 
@@ -67,17 +56,17 @@ class Nearboard {
   }
 
   @view({})
-  getUserProjects({ accountId }): Project[] {
+  getUserProjects({ accountId }: GetUserProjectsParams): Project[] {
     return this.projects.toArray().map(x => x[1]).filter(project => project.owner === accountId);
   }
   
   @view({})
-  getEvent({ eventId }): Event {
+  getEvent({ eventId }: GetEventParams): Event {
     return this.events.get(eventId);
   }
 
   @view({})
-  getProjectEvents({ projectId }): Event[] {
+  getProjectEvents({ projectId }: GetProjectEventsParams): Event[] {
     return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId);
   }
 
@@ -87,12 +76,12 @@ class Nearboard {
   }
   
   @view({})
-  getQuestion({ questionId }): Question {
+  getQuestion({ questionId }: GetQuestionParams): Question {
     return this.questions.get(questionId);
   }
 
   @view({})
-  getEventQuestions({ eventId }): Question[] {
+  getEventQuestions({ eventId }: GetEventQuestionsParams): Question[] {
     return this.questions.toArray().map(x => x[1]).filter(question => question.eventId === eventId);
   }
   
@@ -103,13 +92,13 @@ class Nearboard {
   }
 
   @view({})
-  getProjectUpcomingEvents({ projectId }): Event[] {
+  getProjectUpcomingEvents({ projectId }: GetProjectUpcomingEventsParams): Event[] {
     const timestamp = near.blockTimestamp().toString();
     return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate.toString() >= timestamp);
   }
 
   @view({})
-  getProjectUpcomingEvent({ projectId }): Event {
+  getProjectUpcomingEvent({ projectId }: GetProjectUpcomingEventParams): Event {
     const timestamp = near.blockTimestamp().toString();
     const events = this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate.toString() >= timestamp);
 
@@ -118,14 +107,14 @@ class Nearboard {
     }
 
     events.sort((a, b) => {
-      return a.startDate - b.startDate;
+      return a.startDate.toString().localeCompare(b.startDate.toString());
     });
 
     return events[0];
   }
 
   @view({})
-  getProjectUpcomingEventQuestions({ projectId }): Question[] {
+  getProjectUpcomingEventQuestions({ projectId }: GetProjectUpcomingEventQuestionsParams): Question[] {
     const timestamp = near.blockTimestamp().toString();
     const events = this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate.toString() >= timestamp);
 
@@ -134,14 +123,14 @@ class Nearboard {
     }
 
     events.sort((a, b) => {
-      return a.startDate - b.startDate;
+      return a.startDate.toString().localeCompare(b.startDate.toString());
     });
 
     return this.questions.toArray().map(x => x[1]).filter(question => question.eventId === events[0].id);
   }
 
   @view({})
-  getProjectPreviousEvents({ projectId }): Event[] {
+  getProjectPreviousEvents({ projectId }: GetProjectPreviousEventsParams): Event[] {
     const timestamp = near.blockTimestamp().toString();
     return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate.toString() < timestamp);
   }
@@ -187,14 +176,14 @@ class Nearboard {
   }
 
   @view({})
-  getUserFollows({ accountId }): Project[] {
+  getUserFollows({ accountId }: GetUserFollowsParams): Project[] {
     return this.follows.toArray().filter(follow => follow.split(":")[0] === accountId).map(follow => {
       return this.projects.get(follow.split(":")[1]);
     });
   }
 
   @view({})
-  getProjectFollowers({ projectId }): string[] {
+  getProjectFollowers({ projectId }: GetProjectFollowersParams): string[] {
     return this.follows.toArray().filter(follow => follow.split(":")[1] === projectId).map(follow => follow.split(":")[0]);
   }
 
@@ -232,7 +221,7 @@ class Nearboard {
   }
 
   @call({})
-  createProject({ name, description, websiteUrl, logoUrl }): string {
+  createProject({ name, description, websiteUrl, logoUrl }: CreateProjectParams): string {
     if (near.accountBalance() < CREATE_PROJECT_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_PROJECT_MINIMUM_NEAR} yohtoNEAR to create a project`);
     }
@@ -241,7 +230,7 @@ class Nearboard {
 
     const project: Project = {
       id: this.projectId.toString(),
-      owner: near.signerAccountId(),
+      owner: near.predecessorAccountId(),
       name: name,
       description: description,
       websiteUrl: websiteUrl,
@@ -256,8 +245,12 @@ class Nearboard {
   }
 
   @call({})
-  updateProject({ id, name, description, websiteUrl, logoUrl }) {
+  updateProject({ id, name, description, websiteUrl, logoUrl }: UpdateProjectParams) {
     let project = this.projects.get(id);
+
+    if (project.owner !== near.predecessorAccountId()) {
+      throw Error("Only owner of project can update project");
+    }
     
     const newProject: Project = {
       id: project.id,
@@ -274,7 +267,13 @@ class Nearboard {
   }
 
   @call({})
-  deleteProject({ projectId }) {
+  deleteProject({ projectId }: DeleteProjectParams) {
+    const project = this.projects.get(projectId);
+
+    if (project.owner !== near.predecessorAccountId()) {
+      throw Error("Only owner of project can delete project");
+    }
+
     this.projects.remove(projectId.toString());
 
     const projectEvents = this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId);
@@ -293,7 +292,7 @@ class Nearboard {
   }
 
   @call({})
-  createEvent({ projectId, name, eventUrl, startDate, eventType }): string {
+  createEvent({ projectId, name, eventUrl, startDate, eventType }: CreateEventParams): string {
     if (near.accountBalance() < CREATE_EVENT_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_EVENT_MINIMUM_NEAR} yohtoNEAR to create an event`);
     }
@@ -304,7 +303,7 @@ class Nearboard {
       id: this.eventId.toString(),
       name: name,
       eventUrl: eventUrl,
-      startDate: startDate,
+      startDate: BigInt(startDate),
       eventType: eventType,
       projectId,
     };
@@ -315,14 +314,19 @@ class Nearboard {
   }
 
   @call({})
-  updateEvent({ id, name, eventUrl, startDate, eventType }) {
+  updateEvent({ id, name, eventUrl, startDate, eventType }: UpdateEventParams) {
     let event = this.events.get(id);
+    const project = this.projects.get(event.projectId);
+
+    if (project.owner !== near.predecessorAccountId()) {
+      throw Error("Only owner of project can update event");
+    }
 
     const newEvent: Event = {
       id: event.id,
       name: name,
       eventUrl: eventUrl,
-      startDate: startDate,
+      startDate: BigInt(startDate),
       eventType: eventType,
       projectId: event.projectId,
     };
@@ -331,7 +335,14 @@ class Nearboard {
   }
 
   @call({})
-  deleteEvent({ eventId }) {
+  deleteEvent({ eventId }: DeleteEventParams) {
+    const event = this.events.get(eventId);
+    const project = this.projects.get(event.projectId);
+
+    if (project.owner !== near.predecessorAccountId()) {
+      throw Error("Only owner of project can delete event");
+    }
+
     this.events.remove(eventId);
 
     const eventQuestions = this.questions.toArray().map(x => x[1]).filter(question => question.eventId === eventId);
@@ -342,22 +353,23 @@ class Nearboard {
   }
 
   @call({})
-  createQuestion({ eventId, question }): string {
+  createQuestion({ eventId, question }: CreateQuestionParams): string {
     if (near.accountBalance() < CREATE_QUESTION_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_QUESTION_MINIMUM_NEAR} yohtoNEAR to create a question`);
     }
 
     this.questionId++;
-    const asker = near.signerAccountId();
+    const asker = near.predecessorAccountId();
     
     const newQuestion: Question = {
       id: this.questionId.toString(),
       asker,
       question: question,
       eventId,
+      timestamp: near.blockTimestamp(),
       votes: [
         {
-          voter: near.signerAccountId(),
+          voter: near.predecessorAccountId(),
           nearRepresented: near.accountBalance().toString(),
         }
       ]
@@ -369,14 +381,23 @@ class Nearboard {
   }
 
   @call({})
-  updateQuestion({ id, question }) {
+  updateQuestion({ id, question }: UpdateQuestionParams) {
     let currentQuestion = this.questions.get(id);
+
+    if (currentQuestion.asker !== near.predecessorAccountId()) {
+      throw Error("Only asker can update question");
+    }
+
+    if ((currentQuestion.timestamp + BigInt(1800)) > near.blockTimestamp()) {
+      throw Error("Cannot update question after 30 minutes");
+    }
 
     const newQuestion: Question = {
       id: currentQuestion.id,
       asker: currentQuestion.asker,
       question: question,
       eventId: currentQuestion.eventId,
+      timestamp: currentQuestion.timestamp,
       votes: currentQuestion.votes,
     };
 
@@ -384,20 +405,30 @@ class Nearboard {
   }
 
   @call({})
-  deleteQuestion({ questionId }) {
+  deleteQuestion({ questionId }: DeleteQuestionParams) {
+    const question = this.questions.get(questionId);
+
+    if (question.asker !== near.predecessorAccountId()) {
+      throw Error("Only asker can delete question");
+    }
+
     this.questions.remove(questionId);
   }
 
   @call({})
-  vote({ questionId }) {
+  vote({ questionId }: VoteParams) {
     if (near.accountBalance() < VOTE_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${VOTE_MINIMUM_NEAR} yohtoNEAR to vote`);
     }
     
     const question = this.questions.get(questionId);
 
+    if (question.votes.some(vote => vote.voter === near.predecessorAccountId())) {
+      throw Error("Already voted for this question");
+    }
+
     const vote: Vote = {
-      voter: near.signerAccountId(),
+      voter: near.predecessorAccountId(),
       nearRepresented: near.accountBalance().toString(),
     };
 
@@ -406,19 +437,25 @@ class Nearboard {
   }
 
   @call({})
-  unvote({ questionId }) {
+  unvote({ questionId }: UnvoteParams) {
     const question = this.questions.get(questionId);
-    question.votes = question.votes.filter(vote => vote.voter !== near.signerAccountId());
+    question.votes = question.votes.filter(vote => vote.voter !== near.predecessorAccountId());
     this.questions.set(question.id, question);
   }
 
   @call({})
-  followProject({ projectId }) {
-    this.follows.set(near.signerAccountId() + ":" + projectId);
+  followProject({ projectId }: FollowProjectParams) {
+    const followString = near.predecessorAccountId() + ":" + projectId;
+    if (!this.follows.contains(followString)) {
+      this.follows.set(followString);
+    }
   }
 
   @call({})
-  unfollowProject({ projectId }) {
-    this.follows.remove(near.signerAccountId() + ":" + projectId);
+  unfollowProject({ projectId }: UnfollowProjectParams) {
+    const followString = near.predecessorAccountId() + ":" + projectId;
+    if (this.follows.contains(followString)) {
+      this.follows.remove(followString);
+    }
   }
 }
