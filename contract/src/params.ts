@@ -71,7 +71,7 @@ export type CreateEventParams = {
     projectId: string;
     name: string;
     eventUrl: string;
-    startDate: string;
+    startDate: number;
     eventType: EventType;
 };
 
@@ -79,7 +79,7 @@ export type UpdateEventParams = {
     id: string;
     name: string;
     eventUrl: string;
-    startDate: string;
+    startDate: number;
     eventType: EventType;
 };
 

@@ -231,10 +231,10 @@ class Nearboard {
     const project: Project = {
       id: this.projectId.toString(),
       owner: near.predecessorAccountId(),
-      name: name,
-      description: description,
-      websiteUrl: websiteUrl,
-      logoUrl: logoUrl
+      name,
+      description,
+      websiteUrl,
+      logoUrl,
     };
 
     this.validateProject(project);
@@ -253,12 +253,12 @@ class Nearboard {
     }
     
     const newProject: Project = {
-      id: project.id,
+      id,
       owner: project.owner,
-      name: name,
-      description: description,
-      websiteUrl: websiteUrl,
-      logoUrl: logoUrl,
+      name,
+      description,
+      websiteUrl,
+      logoUrl,
     };
 
     this.validateProject(newProject);
@@ -301,10 +301,10 @@ class Nearboard {
     
     const event: Event = {
       id: this.eventId.toString(),
-      name: name,
-      eventUrl: eventUrl,
+      name,
+      eventUrl,
       startDate: BigInt(startDate),
-      eventType: eventType,
+      eventType,
       projectId,
     };
 
@@ -323,11 +323,11 @@ class Nearboard {
     }
 
     const newEvent: Event = {
-      id: event.id,
-      name: name,
-      eventUrl: eventUrl,
+      id,
+      name,
+      eventUrl,
       startDate: BigInt(startDate),
-      eventType: eventType,
+      eventType,
       projectId: event.projectId,
     };
 
@@ -364,7 +364,7 @@ class Nearboard {
     const newQuestion: Question = {
       id: this.questionId.toString(),
       asker,
-      question: question,
+      question,
       eventId,
       timestamp: near.blockTimestamp(),
       votes: [
@@ -395,7 +395,7 @@ class Nearboard {
     const newQuestion: Question = {
       id: currentQuestion.id,
       asker: currentQuestion.asker,
-      question: question,
+      question,
       eventId: currentQuestion.eventId,
       timestamp: currentQuestion.timestamp,
       votes: currentQuestion.votes,
