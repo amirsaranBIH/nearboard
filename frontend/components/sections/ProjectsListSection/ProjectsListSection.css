@@ -1,0 +1,17 @@
+.projects-list {
+    display: flex;
+    flex-direction: column;
+    gap: .25em;
+}
+
+.projects-list > div {
+    display: flex;
+    align-items: center;
+    gap: .5em;
+}
+
+.projects-list > div img {
+    display: block;
+    width: 30px;
+    border-radius: 100px;
+}

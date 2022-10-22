@@ -1,0 +1,10 @@
+.main .section .heading {
+    margin-bottom: 1em;
+}
+
+.main .section .heading .heading-tooltip {
+    display: flex;
+    gap: .25em;
+    align-items: center;
+    margin-top: .5em;
+}

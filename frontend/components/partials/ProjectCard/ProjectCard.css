@@ -1,0 +1,31 @@
+.project-card-top {
+    display: flex;
+    gap: .5em;
+}
+
+.project-card-image {
+    display: block;
+    border-radius: 100px;
+    max-width: 60px;
+}
+
+.project-card-name {
+    font-size: 20px;
+}
+
+.more {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.more img {
+    margin-bottom: -15px;
+}
+
+.project-followers {
+    display: flex;
+    align-items: center;
+    gap: .5em;
+    justify-content: space-between;
+    margin-top: .5em;
+}

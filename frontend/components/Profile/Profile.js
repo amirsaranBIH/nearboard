@@ -1,0 +1,126 @@
+import React, { useEffect, useState, useContext } from 'react';
+
+import { useNavigate, Link } from 'react-router-dom';
+
+import profileIcon from "../../assets/icons/profile.svg"
+import FaqSection from '../sections/FaqSection/FaqSection';
+import MainHeading from '../partials/MainHeading/MainHeading';
+import ExternalLink from '../partials/ExternalLink/ExternalLink';
+import ProjectCard from '../partials/ProjectCard/ProjectCard';
+import NearboardContext from '../../store/NearboardContext';
+import SearchProjectsSection from '../sections/SearchProjectsSection/SearchProjectsSection';
+import ProjectsListSection from '../sections/ProjectsListSection/ProjectsListSection';
+
+import projectsIcon from "../../assets/icons/projects.svg"
+
+import './Profile.css';
+
+export default function Profile() {
+  const nearboardContext = useContext(NearboardContext);
+  const navigate = useNavigate();
+
+  const [allProjects, setAllProjects] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [projectFollows, setProjectFollows] = useState([]);
+  
+
+  useEffect(() => {
+    nearboardContext.contract.getUserProjects(nearboardContext.wallet.accountId).then(res => {
+      setAllProjects(res);
+      setProjects(res);
+    })
+    nearboardContext.contract.getUserFollows(nearboardContext.wallet.accountId).then(res => {
+      setProjectFollows(res);
+    });
+  }, []);
+
+  function switchWallet() {
+    nearboardContext.wallet.signIn();
+  }
+
+  function signOut() {
+    nearboardContext.wallet.signOut();
+    navigate("/");
+  }
+
+  function getProjectOptions(project) {
+    return [
+      {
+        text: "View Project",
+        method: () => {
+          navigate(`/project/${project.id}`);
+        },
+      },
+      {
+        text: "Update Project",
+        method: () => {
+          navigate(`/project/${project.id}/update`);
+        },
+      },
+      {
+        text: "Create Event",
+        method: () => {
+          navigate(`/project/${project.id}/create-event`);
+        },
+      },
+      {
+        text: "Delete Project",
+        method: () => {
+          nearboardContext.contract.deleteProject(project.id).then(res => {
+            setProjects(projects.filter(p => p.id !== project.id))
+          });
+        },
+      }
+    ]
+  }
+
+  function onFollow(project) {
+    setProjectFollows(projectFollows.concat([project]));
+  }
+
+  function onUnfollow(project) {
+    setProjectFollows(projectFollows.filter(follow => follow.id !== project.id));
+  }
+
+  return (
+    <div>
+      <div className="wrapper">
+        <aside className="aside">
+          <div className="section">
+            <div className="heading">
+              <img src={profileIcon} alt="profile icon" />
+              <span>Logged in as</span>
+            </div>
+            <div className="account-id"><ExternalLink text={nearboardContext.wallet.accountId} to={"https://explorer.testnet.near.org/accounts/" + nearboardContext.wallet.accountId} /></div>
+            <div className="profile-button">
+              <button className="btn" onClick={switchWallet}>Switch wallet</button>
+              <button className="btn btn--secondary" onClick={signOut}>Log out</button>
+            </div>
+          </div>
+          <SearchProjectsSection projects={allProjects} setProjects={setProjects} />
+          <div className="section">
+            <div className="heading">
+              <img src={projectsIcon} alt="four boxes icon" />
+              <span>Projects You Follow</span>
+            </div>
+            <ProjectsListSection projects={projectFollows} />
+          </div>
+          <FaqSection />
+        </aside>
+        <main className="main">
+          <div className="section">
+            <MainHeading heading={"My Projects"} tooltip={"List of my projects where I can create events"} />
+            {projects.length > 0 ? 
+            <div className="my-projects">
+              {projects.map(project => {
+                return <ProjectCard key={project.id} project={project} options={getProjectOptions(project)} onFollow={onFollow} onUnfollow={onUnfollow} />
+              })}
+            </div>
+            : <div className="no-content">No projects created</div>}
+            <Link to="/create-project"><button className="btn">+ CREATE PROJECT</button></Link>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
