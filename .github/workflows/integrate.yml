@@ -14,4 +14,4 @@ jobs:
           node-version: "16"
       - run: yarn
       - run: cd contract && yarn build
-      - run: cd integration-tests && npm test -- -- \"../contract/build/nearboard.wasm\""
+      - run: cd integration-tests && npm test -- -- \"../contract/build/nearboard.wasm\"
