@@ -361,34 +361,34 @@ test('deletes a question', async (t) => {
 });
 
 test('votes', async (t) => {
-  const { root, contract } = t.context.accounts;
+  const { ali, contract } = t.context.accounts;
 
   const questionId = "1";
 
-  await root.call(contract, 'vote', { questionId }).catch(err => {
+  await ali.call(contract, 'vote', { questionId }).catch(err => {
+    t.fail(err.message);
+  });
+
+  const question: any = await contract.view('getQuestion', { questionId });
+
+  t.is(question.votes.length, 2);
+});
+
+test('unvotes', async (t) => {
+  const { ali, contract } = t.context.accounts;
+
+  const questionId = "1";
+
+  await ali.call(contract, 'vote', { questionId }).catch(err => {
+    t.fail(err.message);
+  });
+  await ali.call(contract, 'unvote', { questionId }).catch(err => {
     t.fail(err.message);
   });
 
   const question: any = await contract.view('getQuestion', { questionId });
 
   t.is(question.votes.length, 1);
-});
-
-test('unvotes', async (t) => {
-  const { root, contract } = t.context.accounts;
-
-  const questionId = "1";
-
-  await root.call(contract, 'vote', { questionId }).catch(err => {
-    t.fail(err.message);
-  });
-  await root.call(contract, 'unvote', { questionId }).catch(err => {
-    t.fail(err.message);
-  });
-
-  const question: any = await contract.view('getQuestion', { questionId });
-
-  t.is(question.votes.length, 0);
 });
 
 test('follows project', async (t) => {
