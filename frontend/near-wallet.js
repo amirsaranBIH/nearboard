@@ -11,6 +11,10 @@ import { setupModal } from '@near-wallet-selector/modal-ui';
 import { setupWalletSelector } from '@near-wallet-selector/core';
 import { setupLedger } from '@near-wallet-selector/ledger';
 import { setupMyNearWallet } from '@near-wallet-selector/my-near-wallet';
+import { setupMathWallet } from '@near-wallet-selector/math-wallet';
+import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
+import { setupSender } from '@near-wallet-selector/sender';
+import { setupNightly } from '@near-wallet-selector/nightly';
 
 const THIRTY_TGAS = '30000000000000';
 const NO_DEPOSIT = '0';
@@ -35,8 +39,14 @@ export class Wallet {
   async startUp() {
     this.walletSelector = await setupWalletSelector({
       network: this.network,
-      modules: [setupMyNearWallet(),
-      setupLedger()],
+      modules: [
+        setupMyNearWallet(),
+        setupSender(),
+        setupMeteorWallet(),
+        setupNightly(),
+        setupLedger(),
+        setupMathWallet(),
+      ],
     });
 
     const isSignedIn = this.walletSelector.isSignedIn();
@@ -97,7 +107,11 @@ export class Wallet {
       ],
     })
     .then(res => {
-      return Buffer.from(res.status.SuccessValue, "base64").toString();
+      const value = Buffer.from(res.status.SuccessValue, "base64").toString();
+      if (!value) {
+        return;
+      }
+      return JSON.parse(value);
     })
     .catch(err => {
       console.log(err);

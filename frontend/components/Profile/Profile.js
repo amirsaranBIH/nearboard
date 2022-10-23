@@ -12,8 +12,10 @@ import SearchProjectsSection from '../sections/SearchProjectsSection/SearchProje
 import ProjectsListSection from '../sections/ProjectsListSection/ProjectsListSection';
 
 import projectsIcon from "../../assets/icons/projects.svg"
+import addIcon from "../../assets/icons/add.svg"
 
 import './Profile.css';
+import Button from '../partials/Button/Button';
 
 export default function Profile() {
   const nearboardContext = useContext(NearboardContext);
@@ -66,7 +68,11 @@ export default function Profile() {
       {
         text: "Delete Project",
         method: () => {
+          if (!confirm("Are you sure you want to delete project?")) {
+            return;
+          }
           nearboardContext.contract.deleteProject(project.id).then(res => {
+            setAllProjects(allProjects.filter(p => p.id !== project.id))
             setProjects(projects.filter(p => p.id !== project.id))
           });
         },
@@ -117,7 +123,8 @@ export default function Profile() {
               })}
             </div>
             : <div className="no-content">No projects created</div>}
-            <Link to="/create-project"><button className="btn">+ CREATE PROJECT</button></Link>
+            
+            <Link to="/create-project"><Button icon={addIcon}>CREATE PROJECT</Button></Link>
           </div>
         </main>
       </div>

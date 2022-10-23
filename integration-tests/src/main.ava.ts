@@ -233,7 +233,7 @@ test('returns project followers', async (t) => {
 
 test('creates a project', async (t) => {
   const { root, contract } = t.context.accounts;
-  const createdProjectId: any = await root.call(contract, 'createProject', {
+  const createdProject: any = await root.call(contract, 'createProject', {
     name: "Project name",
     description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     websiteUrl: "http://aurora.dev",
@@ -242,8 +242,8 @@ test('creates a project', async (t) => {
     t.fail(err.message);
   });
 
-  const project: any = await contract.view('getProject', { projectId: createdProjectId });
-  t.is(project.id, createdProjectId.toString());
+  const project: any = await contract.view('getProject', { projectId: createdProject.id });
+  t.is(project.id, createdProject.id);
 });
 
 test('updates a project', async (t) => {
@@ -277,7 +277,7 @@ test('deletes a project', async (t) => {
 
 test('creates an event', async (t) => {
   const { root, contract } = t.context.accounts;
-  const createdEventId: any = await root.call(contract, 'createEvent', {
+  const createdEvent: any = await root.call(contract, 'createEvent', {
     projectId: "1",
     name: "Event name",
     eventUrl: "https://aurora.dev",
@@ -287,8 +287,8 @@ test('creates an event', async (t) => {
     t.fail(err.message);
   });
 
-  const event: any = await contract.view('getEvent', { eventId: createdEventId });
-  t.is(event.id, createdEventId.toString());
+  const event: any = await contract.view('getEvent', { eventId: createdEvent.id });
+  t.is(event.id, createdEvent.id);
 });
 
 test('updates an event', async (t) => {
@@ -323,15 +323,15 @@ test('deletes an event', async (t) => {
 
 test('creates a question', async (t) => {
   const { root, contract } = t.context.accounts;
-  const createdQuestionId: any = await root.call(contract, 'createQuestion', {
+  const createdQuestion: any = await root.call(contract, 'createQuestion', {
     eventId: "1",
     question: "This is a question"
   }).catch(err => {
     t.fail(err.message);
   });
 
-  const question: any = await contract.view('getQuestion', { questionId: createdQuestionId });
-  t.is(question.id, createdQuestionId.toString());
+  const question: any = await contract.view('getQuestion', { questionId: createdQuestion.id });
+  t.is(question.id, createdQuestion.id);
 });
 
 test('updates a question', async (t) => {

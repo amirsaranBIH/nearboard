@@ -3,10 +3,15 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import NearboardContext from '../../store/NearboardContext';
+import Button from '../partials/Button/Button';
 import EventCard from '../partials/EventCard/EventCard';
 import MainHeading from '../partials/MainHeading/MainHeading';
 import ProjectCard from '../partials/ProjectCard/ProjectCard';
 import FaqSection from '../sections/FaqSection/FaqSection';
+
+import addIcon from '../../assets/icons/add.svg';
+import editIcon from '../../assets/icons/edit.svg';
+import trashIcon from '../../assets/icons/trash.svg';
 
 import './UpdateProject.css';
 
@@ -16,6 +21,8 @@ export default function UpdateProject() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [errors, setErrors] = useState({});
+  const [dirty, setDirty] = useState(false);
   const [project, setProject] = useState({});
   const [events, setEvents] = useState([]);
 
@@ -28,6 +35,10 @@ export default function UpdateProject() {
       });
     });
   }, []);
+
+  useEffect(() => {
+    checkErrors();
+  }, [project]);
 
   function onProjectNameChangeHandler(e) {
     setProject({ ...project, name: e.target.value });
@@ -48,12 +59,76 @@ export default function UpdateProject() {
   function onSubmitHandler(e) {
     e.preventDefault();
 
+    setDirty(true);
+
+    const isValid = verifyFormValues();
+
+    if (!isValid) {
+      console.log("Form is not valid");
+      return;
+    }
+
     nearboardContext.contract.updateProject(project).then(res => {
       console.log(res)
     });
   }
 
+  function isUrl(url) {
+    const res = url.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+    return res !== null;
+  }
+
+  function verifyFormValues() {
+    const errorMessages = {};
+
+    
+    if (project.name.length < 3) {
+      errorMessages.name = "Project name must be at least 3 characters"
+    }
+
+    if (project.name.length > 50) {
+      errorMessages.name = "Project name must be 50 characters or less";
+    }
+
+    if (project.description.length < 20) {
+      errorMessages.description = "Project description must be at lease 20 characters";
+    }
+
+    if (project.description.length > 100) {
+      errorMessages.description = "Project description must be 100 characters or less";
+    }
+
+    if (!isUrl(project.websiteUrl)) {
+      errorMessages.websiteUrl = "Invalid website url";
+    }
+
+    if (!isUrl(project.logoUrl)) {
+      errorMessages.logoUrl = "Invalid logo url";
+    }
+
+    setErrors(errorMessages);
+
+    return Object.keys(errorMessages).length === 0;
+  }
+
+  function hasErrors(field) {
+    return errors[field] !== undefined;
+  }
+
+  function getError(field) {
+    return errors[field];
+  }
+
+  function checkErrors() {
+    if (dirty) {
+      verifyFormValues();
+    }
+  }
+
   function deleteProject() {
+    if (!confirm("Are you sure you want to delete project?")) {
+      return;
+    }
     nearboardContext.contract.deleteProject(project.id).then(res => {
       navigate("/profile");
     });
@@ -70,6 +145,9 @@ export default function UpdateProject() {
       {
         text: "Delete",
         method: () => {
+          if (!confirm("Are you sure you want to delete event?")) {
+            return;
+          }
           nearboardContext.contract.deleteEvent(event.id).then(res => {
             setEvents(events.filter(e => e.id !== event.id));
           });
@@ -91,13 +169,33 @@ export default function UpdateProject() {
           <div className="section">
             <MainHeading heading={"Update Aurora Project"} tooltip={"Update project information"} />
             <form className="form update-project-form" onSubmit={onSubmitHandler}>
-              <input className="input" type="text" placeholder="Name" value={project.name} onInput={onProjectNameChangeHandler} />
-              <input className="input" type="text" placeholder="Description (max. 100 characters)" value={project.description} onInput={onProjectDescriptionChangeHandler} />
-              <input className="input" type="text" placeholder="Website URL" value={project.websiteUrl} onInput={onProjectWebsiteUrlChangeHandler} />
-              <input className="input" type="text" placeholder="Logo image URL" value={project.logoUrl} onInput={onProjectLogoUrlChangeHandler} />
+              <div className="form-field">
+                <input className="input" type="text" placeholder="Name" value={project.name} onInput={onProjectNameChangeHandler} />
+                {hasErrors("name") && (
+                  <span className="error-message">{getError("name")}</span>
+                )}
+              </div>
+              <div className="form-field">
+                <input className="input" type="text" placeholder="Description (max. 100 characters)" value={project.description} onInput={onProjectDescriptionChangeHandler} />
+                {hasErrors("description") && (
+                  <span className="error-message">{getError("description")}</span>
+                )}
+              </div>
+              <div className="form-field">
+                <input className="input" type="text" placeholder="Website URL" value={project.websiteUrl} onInput={onProjectWebsiteUrlChangeHandler} />
+                {hasErrors("websiteUrl") && (
+                  <span className="error-message">{getError("websiteUrl")}</span>
+                )}
+              </div>
+              <div className="form-field">
+                <input className="input" type="text" placeholder="Logo image URL" value={project.logoUrl} onInput={onProjectLogoUrlChangeHandler} />
+                {hasErrors("logoUrl") && (
+                  <span className="error-message">{getError("logoUrl")}</span>
+                )}
+              </div>
               <div className="update-project-info-buttons">
-                <button className="btn" type="submit">UPDATE PROJECT</button>
-                <button className="btn btn--secondary" type="button" onClick={deleteProject}>DELETE PROJECT</button>
+                <Button icon={editIcon} type={"submit"}>UPDATE PROJECT</Button>
+                <Button icon={trashIcon} color={"secondary"} onClick={deleteProject}>DELETE PROJECT</Button>
               </div>
             </form>
             <MainHeading heading={"Aurora Events"} tooltip={"Create and update event information"} />
@@ -106,7 +204,7 @@ export default function UpdateProject() {
                 return <EventCard key={event.id} event={event} options={getEventOptions(event)} />;
               })}
             </div> : <div className="no-content">No events created</div>}
-            <Link to={`/project/${project.id}/create-event`}><button className="btn">+ CREATE EVENT</button></Link>
+            <Link to={"/project/" + project.id + "/create-event"}><Button icon={addIcon}>CREATE EVENT</Button></Link>
           </div>
         </main>
       </div>

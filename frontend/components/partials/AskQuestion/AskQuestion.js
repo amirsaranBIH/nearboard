@@ -1,23 +1,76 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef, useContext, useState } from 'react';
 import NearboardContext from '../../../store/NearboardContext';
 
-import './AskQuestion.css';
+import addIcon from '../../../assets/icons/add.svg';
 
-export default function AskQuestion({ projectId, eventId }) {
+import './AskQuestion.css';
+import Button from '../Button/Button';
+
+export default function AskQuestion({ projectId, eventId, onCreateQuestion }) {
   const nearboardContext = useContext(NearboardContext);
+
+  const [errors, setErrors] = useState({});
+  const [dirty, setDirty] = useState(false);
 
   const askQuestionInputRef = useRef(null);
 
-  function createQuestion() {
+  function onSubmitHandler(e) {
+    e.preventDefault();
+
+    setDirty(true);
+
+    const isValid = verifyFormValues();
+
+    if (!isValid) {
+      console.log("Form is not valid");
+      return;
+    }
+
     nearboardContext.contract.createQuestion({ projectId, eventId, question: askQuestionInputRef.current.value }).then(res => {
-      console.log(res);
+      onCreateQuestion(res);
+      askQuestionInputRef.current.value = "";
     });
+  }
+
+  function verifyFormValues() {
+    const errorMessages = {};
+
+    const askQuestionValue = askQuestionInputRef.current.value;
+
+    if (askQuestionValue.length < 3) {
+      errorMessages.question = "Question name must be at least 3 characters";
+    }
+
+    setErrors(errorMessages);
+
+    return Object.keys(errorMessages).length === 0;
+  }
+
+  function hasErrors(field) {
+    return errors[field] !== undefined;
+  }
+
+  function getError(field) {
+    return errors[field];
+  }
+
+  function checkErrors() {
+    if (dirty) {
+      verifyFormValues();
+    }
   }
 
   return (
     <div className="ask-question">
-      <input className="input" type="text" placeholder="Ask your question here" ref={askQuestionInputRef} />
-      <button className="ask-btn" onClick={createQuestion}>+</button>
+      <form onSubmit={onSubmitHandler}>
+        <div className="form-field">
+          <input className="input" type="text" placeholder="Ask your question here" ref={askQuestionInputRef} onChange={checkErrors} />
+          {hasErrors("question") && (
+            <span className="error-message">{getError("question")}</span>
+          )}
+        </div>
+        <Button icon={addIcon} type={"submit"}>ADD</Button>
+      </form>
     </div>
   );
 }

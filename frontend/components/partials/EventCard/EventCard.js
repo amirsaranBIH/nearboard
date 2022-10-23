@@ -38,11 +38,11 @@ export default function EventCard({ event, options }) {
       "DEC",
     ];
 
-    return MONTHS[new Date(date).getMonth()];
+    return MONTHS[new Date(Number(date)).getMonth()];
   }
 
   function getDay(date) {
-    return new Date(date).getDate();
+    return new Date(Number(date)).getDate();
   }
   
   return (
