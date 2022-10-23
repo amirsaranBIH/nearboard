@@ -38,7 +38,6 @@ export default function Event() {
       {
         text: "Update Question",
         method: () => {
-          console.log("Update Question");
           Emitter.emit("OPEN_UPDATE_QUESTION_MODAL", question);
         },
       },

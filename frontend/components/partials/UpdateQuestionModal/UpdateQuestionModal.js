@@ -2,11 +2,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import Emitter from '../../../emitter';
 import NearboardContext from '../../../store/NearboardContext';
 import Modal from '../Modal/Modal';
+import Button from '../Button/Button';
 
 import editIcon from '../../../assets/icons/edit.svg';
 
 import './UpdateQuestionModal.css';
-import Button from '../Button/Button';
 
 export default function UpdateQuestionModal({ onQuestionUpdate }) {
   const nearboardContext = useContext(NearboardContext);
@@ -41,7 +41,6 @@ export default function UpdateQuestionModal({ onQuestionUpdate }) {
     }
 
     nearboardContext.contract.updateQuestion({ id: question.id, question: question.question }).then(res => {
-      console.log(res);
       onQuestionUpdate(question);
       Emitter.emit("SET_SHOW_MODAL", false);
     });

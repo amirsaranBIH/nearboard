@@ -106,7 +106,7 @@ a {
   padding: var(--gap);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(auto, 300px) minmax(600px, 1fr);
+  grid-template-columns: minmax(auto, 320px) minmax(600px, 1fr);
   gap: var(--gap);
   max-height: calc(100vh - var(--header-height));
 }

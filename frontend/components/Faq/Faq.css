@@ -1,0 +1,41 @@
+.questions {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.questions > div {
+    cursor: pointer;
+}
+
+.selected-question {
+    color: var(--primary);
+}
+
+.selected-question::before {
+    content: "> ";
+}
+
+.answer-question {
+    font-size: 25px;
+    margin-bottom: .5em;
+}
+
+.question-answer {
+    line-height: 22px;
+}
+
+.question-answer p {
+    margin-top: 1em;
+}
+
+.question-answer ol,
+.question-answer ul {
+    margin-top: .5em;
+    margin-left: 2em;
+}
+
+.question-answer ol li + li,
+.question-answer ul li + li {
+    margin-top: .5em;
+}

@@ -15,14 +15,12 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
 
   useEffect(() => {
     nearboardContext.contract.getProjectFollowers(project.id).then(res => {
-      console.log(res);
       setFollowers(res);
     });
   }, []);
 
   function followProject() {
     nearboardContext.contract.followProject(project.id).then(res => {
-      console.log(res);
       setFollowers(followers.concat([nearboardContext.wallet.accountId]));
       if (onFollow) {
         onFollow(project);
@@ -32,7 +30,6 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
 
   function unfollowProject() {
     nearboardContext.contract.unfollowProject(project.id).then(res => {
-      console.log(res);
       setFollowers(followers.filter(follower => follower !== nearboardContext.wallet.accountId));
       if (onUnfollow) {
         onUnfollow(project);
