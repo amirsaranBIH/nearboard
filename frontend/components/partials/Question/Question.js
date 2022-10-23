@@ -6,10 +6,11 @@ import { Link } from 'react-router-dom';
 import arrowUpIcon from "../../../assets/icons/arrowup.svg"
 import arrowUpWhiteIcon from "../../../assets/icons/arrowup-white.svg"
 import NearboardContext from '../../../store/NearboardContext';
+import MoreOptions from '../MoreOptions/MoreOptions';
 
 import './Question.css';
 
-export default function Question({ event, question }) {
+export default function Question({ event, question, options }) {
   const nearboardContext = useContext(NearboardContext);
 
   const [nearRepresented, setNearRepresented] = useState(0);
@@ -58,6 +59,7 @@ export default function Question({ event, question }) {
             <span className="question-near-represented">{nearRepresented} NEAR represented</span>
           </div>
         </div>
+        {(options && nearboardContext.wallet.accountId === question.asker) && <MoreOptions options={options} />}
       </div>
     </div>
   );

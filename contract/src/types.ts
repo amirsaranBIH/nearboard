@@ -5,7 +5,7 @@ export enum EventType {
     OnlineEvent,
     AMA,
     Podcast,
-  };
+};
   
 export type Project = {
     id: string;
