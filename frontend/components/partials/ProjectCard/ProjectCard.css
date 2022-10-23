@@ -13,15 +13,6 @@
     font-size: 20px;
 }
 
-.more {
-    display: flex;
-    justify-content: flex-end;
-}
-
-.more img {
-    margin-bottom: -15px;
-}
-
 .project-followers {
     display: flex;
     align-items: center;

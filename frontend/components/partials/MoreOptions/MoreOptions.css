@@ -7,7 +7,7 @@
 }
 
 .more-options {
-    position: fixed;
+    position: absolute;
     box-shadow: 0px 4px 10px 0px #00000040;
     background-color: white;
     border-radius: 10px;
@@ -15,7 +15,8 @@
     display: flex;
     flex-direction: column;
     gap: .5em;
-    margin-top: 30px;
+    top: calc(100% + 10px);
+    right: 0;
 }
 
 .more-options > div {
@@ -24,4 +25,13 @@
 
 .more-options > div:hover {
     color: var(--secondary)
+}
+
+.more {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.more img {
+    margin-bottom: -15px;
 }

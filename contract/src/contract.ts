@@ -26,7 +26,7 @@ import type {
   UpdateQuestionParams,
   VoteParams
 } from "./params";
-import type { Project, Event, Question, Vote } from "./types";
+import { Project, Event, Question, Vote, EventType } from "./types";
 
 const CREATE_PROJECT_MINIMUM_NEAR: bigint = BigInt(100_000_000_000_000_000_000_000_000n); // 100 NEAR
 const CREATE_EVENT_MINIMUM_NEAR: bigint = BigInt(100_000_000_000_000_000_000_000_000n); // 100 NEAR
@@ -203,6 +203,10 @@ class Nearboard {
       errorMessages.push("Project name must be 50 characters or less");
     }
 
+    if (project.description.length < 20) {
+      errorMessages.push("Project description must be at lease 20 characters");
+    }
+
     if (project.description.length > 100) {
       errorMessages.push("Project description must be 100 characters or less");
     }
@@ -220,8 +224,36 @@ class Nearboard {
     }
   }
 
+  validateEvent(event: Event) {
+    const errorMessages = [];
+
+    if (event.name.length < 3) {
+      errorMessages.push("Event name must be at least 3 characters");
+    }
+
+    if (event.name.length > 50) {
+      errorMessages.push("Event name must be 50 characters or less");
+    }
+
+    if (!this.isUrl(event.eventUrl)) {
+      errorMessages.push("Invalid website url");
+    }
+
+    if (!event.startDate) {
+      errorMessages.push("Event start date not set");
+    }
+
+    if (!Object.values(EventType).includes(event.eventType)) {
+      errorMessages.push("Event type must be in enum EventType");
+    }
+
+    if (errorMessages.length > 0) {
+        throw Error(errorMessages.join(", "));
+    }
+  }
+
   @call({})
-  createProject({ name, description, websiteUrl, logoUrl }: CreateProjectParams): string {
+  createProject({ name, description, websiteUrl, logoUrl }: CreateProjectParams): Project {
     if (near.accountBalance() < CREATE_PROJECT_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_PROJECT_MINIMUM_NEAR} yohtoNEAR to create a project`);
     }
@@ -239,9 +271,9 @@ class Nearboard {
 
     this.validateProject(project);
 
-    this.projects.set(this.projectId.toString(), project);
+    this.projects.set(project.id, project);
 
-    return this.projectId.toString();
+    return project;
   }
 
   @call({})
@@ -263,7 +295,7 @@ class Nearboard {
 
     this.validateProject(newProject);
 
-    this.projects.set(project.id.toString(), newProject);
+    this.projects.set(project.id, newProject);
   }
 
   @call({})
@@ -274,7 +306,7 @@ class Nearboard {
       throw Error("Only owner of project can delete project");
     }
 
-    this.projects.remove(projectId.toString());
+    this.projects.remove(projectId);
 
     const projectEvents = this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId);
 
@@ -292,7 +324,7 @@ class Nearboard {
   }
 
   @call({})
-  createEvent({ projectId, name, eventUrl, startDate, eventType }: CreateEventParams): string {
+  createEvent({ projectId, name, eventUrl, startDate, eventType }: CreateEventParams): Event {
     if (near.accountBalance() < CREATE_EVENT_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_EVENT_MINIMUM_NEAR} yohtoNEAR to create an event`);
     }
@@ -308,9 +340,11 @@ class Nearboard {
       projectId,
     };
 
-    this.events.set(this.eventId.toString(), event);
+    this.validateEvent(event);
 
-    return this.eventId.toString();
+    this.events.set(event.id, event);
+
+    return event;
   }
 
   @call({})
@@ -331,7 +365,9 @@ class Nearboard {
       projectId: event.projectId,
     };
 
-    this.events.set(event.id.toString(), newEvent);
+    this.validateEvent(newEvent);
+
+    this.events.set(event.id, newEvent);
   }
 
   @call({})
@@ -353,7 +389,7 @@ class Nearboard {
   }
 
   @call({})
-  createQuestion({ eventId, question }: CreateQuestionParams): string {
+  createQuestion({ eventId, question }: CreateQuestionParams): Question {
     if (near.accountBalance() < CREATE_QUESTION_MINIMUM_NEAR) {
       throw Error(`Your account balance needs to be minimum ${CREATE_QUESTION_MINIMUM_NEAR} yohtoNEAR to create a question`);
     }
@@ -375,9 +411,9 @@ class Nearboard {
       ]
     };
 
-    this.questions.set(this.questionId.toString(), newQuestion);
+    this.questions.set(newQuestion.id, newQuestion);
 
-    return this.questionId.toString();
+    return newQuestion;
   }
 
   @call({})
@@ -401,7 +437,7 @@ class Nearboard {
       votes: currentQuestion.votes,
     };
 
-    this.questions.set(newQuestion.id.toString(), newQuestion);
+    this.questions.set(newQuestion.id, newQuestion);
   }
 
   @call({})

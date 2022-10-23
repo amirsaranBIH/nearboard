@@ -1,0 +1,13 @@
+.btn-with-image {
+    display: flex;
+    align-items: center;
+    gap: .25em;
+}
+
+.btn-with-image img {
+    width: 18px;
+}
+
+.btn-with-image div {
+    margin-bottom: -1px;
+}

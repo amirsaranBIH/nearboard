@@ -106,6 +106,14 @@ export class Nearboard {
     return await this.callMethod({ contractId: this.contractId, method: 'createQuestion', args });
   }
 
+  async updateQuestion(args) {
+    return await this.callMethod({ contractId: this.contractId, method: 'updateQuestion', args });
+  }
+
+  async deleteQuestion(questionId) {
+    return await this.callMethod({ contractId: this.contractId, method: 'deleteQuestion', args: { questionId } });
+  }
+
   async vote(questionId) {
     return await this.callMethod({ contractId: this.contractId, method: 'vote', args: { questionId } });
   }
