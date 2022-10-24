@@ -14,6 +14,7 @@ import editIcon from '../../assets/icons/edit.svg';
 import trashIcon from '../../assets/icons/trash.svg';
 
 import './UpdateProject.css';
+import { toast } from 'react-toastify';
 
 export default function UpdateProject() {
   const nearboardContext = useContext(NearboardContext);
@@ -68,8 +69,8 @@ export default function UpdateProject() {
       return;
     }
 
-    nearboardContext.contract.updateProject(project).then(res => {
-      console.log(res)
+    nearboardContext.contract.updateProject(project).then(() => {
+      toast.success("Successfully updated project");
     });
   }
 
@@ -129,7 +130,8 @@ export default function UpdateProject() {
     if (!confirm("Are you sure you want to delete project?")) {
       return;
     }
-    nearboardContext.contract.deleteProject(project.id).then(res => {
+    nearboardContext.contract.deleteProject(project.id).then(() => {
+      toast.success("Successfully deleted project");
       navigate("/profile");
     });
   }
@@ -148,7 +150,8 @@ export default function UpdateProject() {
           if (!confirm("Are you sure you want to delete event?")) {
             return;
           }
-          nearboardContext.contract.deleteEvent(event.id).then(res => {
+          nearboardContext.contract.deleteEvent(event.id).then(() => {
+            toast.success("Successfully deleted event");
             setEvents(events.filter(e => e.id !== event.id));
           });
         },

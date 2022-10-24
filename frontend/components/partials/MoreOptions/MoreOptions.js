@@ -12,8 +12,8 @@ export default function MoreOptions({ options }) {
   }
 
   return (
-    <div className="more" onClick={toggleOptions}>
-      <img src={moreIcon} alt="more icon" />
+    <div className="more">
+      <img src={moreIcon} alt="more icon" onClick={toggleOptions} />
       {showOptions && 
       <div className="more-options">
         {options.map((option, i) => {

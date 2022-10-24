@@ -14,6 +14,7 @@ import projectsIcon from "../../assets/icons/projects.svg"
 
 import './Home.css';
 import UpdateQuestionModal from '../partials/UpdateQuestionModal/UpdateQuestionModal';
+import { toast } from 'react-toastify';
 
 export default function Home() {
   const nearboardContext = useContext(NearboardContext);
@@ -46,7 +47,8 @@ export default function Home() {
           if (!confirm("Are you sure you want to delete question?")) {
             return;
           }
-          nearboardContext.contract.deleteQuestion(question.id).then(res => {
+          nearboardContext.contract.deleteQuestion(question.id).then(() => {
+            toast.success("Successfully deleted question");
             setAllQuestions(allQuestions.filter(q => q.id !== question.id));
             setQuestions(questions.filter(q => q.id !== question.id));
           });

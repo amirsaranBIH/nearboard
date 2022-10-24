@@ -16,6 +16,8 @@ import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
 import { setupSender } from '@near-wallet-selector/sender';
 import { setupNightly } from '@near-wallet-selector/nightly';
 
+import Emitter from './emitter';
+
 const THIRTY_TGAS = '30000000000000';
 const NO_DEPOSIT = '0';
 
@@ -115,6 +117,7 @@ export class Wallet {
     })
     .catch(err => {
       console.log(err);
+      Emitter.emit("TOAST_ERROR_MESSAGE", err.kind.ExecutionError.split("\n")[0]);
     });
   }
 
