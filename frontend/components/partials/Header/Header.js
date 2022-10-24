@@ -27,7 +27,7 @@ export default function Header() {
       <Link className="logo" to="/"><img src={logo} alt="Nearboard logo" /></Link>
       <div className="navigation-wrapper">
         <button className="menu-button btn btn--small" type="button" onClick={toggleMenu}>MENU</button>
-        {showMenu && <nav className="navigation">
+        {(window.innerWidth > 992 || showMenu) && <nav className="navigation">
           <Link className="link" to="/projects">Projects</Link>
           <Link className="link" to="/events">Events</Link>
           <Link className="link" to="/faq">FAQ</Link>
@@ -35,5 +35,5 @@ export default function Header() {
         </nav>}
       </div>
     </header>
-);
+  );
 }

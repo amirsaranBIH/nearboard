@@ -9,6 +9,7 @@ import Button from '../partials/Button/Button';
 import addIcon from '../../assets/icons/add.svg';
 
 import './CreateEvent.css';
+import { toast } from 'react-toastify';
 
 export default function CreateEvent() {
   const { id } = useParams();
@@ -50,7 +51,8 @@ export default function CreateEvent() {
       eventType: eventTypeInputRef.current.value,
     };
 
-    nearboardContext.contract.createEvent(data).then(res => {
+    nearboardContext.contract.createEvent(data).then(() => {
+      toast.success("Successfully created event");
       navigate(`/project/${id}/update`);
     });
   }

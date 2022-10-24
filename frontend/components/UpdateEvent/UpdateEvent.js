@@ -9,6 +9,7 @@ import FaqSection from '../sections/FaqSection/FaqSection';
 import editIcon from '../../assets/icons/edit.svg';
 
 import './UpdateEvent.css';
+import { toast } from 'react-toastify';
 
 export default function UpdateEvent() {
   const nearboardContext = useContext(NearboardContext);
@@ -61,8 +62,8 @@ export default function UpdateEvent() {
       return;
     }
 
-    nearboardContext.contract.updateEvent(event).then(res => {
-      console.log(res)
+    nearboardContext.contract.updateEvent(event).then(() => {
+      toast.success("Successfully updated event");
     });
   }
 

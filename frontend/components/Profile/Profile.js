@@ -16,6 +16,7 @@ import addIcon from "../../assets/icons/add.svg"
 
 import './Profile.css';
 import Button from '../partials/Button/Button';
+import { toast } from 'react-toastify';
 
 export default function Profile() {
   const nearboardContext = useContext(NearboardContext);
@@ -71,7 +72,8 @@ export default function Profile() {
           if (!confirm("Are you sure you want to delete project?")) {
             return;
           }
-          nearboardContext.contract.deleteProject(project.id).then(res => {
+          nearboardContext.contract.deleteProject(project.id).then(() => {
+            toast.success("Successfully deleted project");
             setAllProjects(allProjects.filter(p => p.id !== project.id))
             setProjects(projects.filter(p => p.id !== project.id))
           });

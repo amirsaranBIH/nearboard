@@ -41,7 +41,7 @@ const questions = [
   {
     question: "Why can't I update my question?",
     answer: `
-      <p>Only the first 30 minutes after a question is asked can it be updated.</p>
+      <p>Questions can't be updated if they reach 50 votes.</p>
       <p>This prevents askers from changing their question after receiving a large number of votes.</p>
     `
   },

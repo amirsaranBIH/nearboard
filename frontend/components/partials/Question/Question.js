@@ -9,6 +9,7 @@ import NearboardContext from '../../../store/NearboardContext';
 import MoreOptions from '../MoreOptions/MoreOptions';
 
 import './Question.css';
+import { toast } from 'react-toastify';
 
 export default function Question({ event, question, options }) {
   const nearboardContext = useContext(NearboardContext);
@@ -24,14 +25,15 @@ export default function Question({ event, question, options }) {
   }
 
   function vote() {
-    nearboardContext.contract.vote(question.id).then(res => {
+    nearboardContext.contract.vote(question.id).then(() => {
+      toast.success("Successfully voted");
       console.log(res);
     });
   }
 
   function unvote() {
-    nearboardContext.contract.unvote(question.id).then(res => {
-      console.log(res);
+    nearboardContext.contract.unvote(question.id).then(() => {
+      toast.success("Successfully unvoted");
     });
   }
 

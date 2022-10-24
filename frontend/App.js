@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Home from "./components/Home/Home.js";
@@ -21,13 +21,25 @@ import NearboardContext from './store/NearboardContext.js';
 import LoadingContext from './store/LoadingContext.js';
 import Header from './components/partials/Header/Header.js';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Emitter from './emitter.js';
+
 
 export default function App() {
   const nearboardContext = useContext(NearboardContext);
   const loadingContext = useContext(LoadingContext);
 
+  useEffect(() => {
+    Emitter.on("TOAST_ERROR_MESSAGE", (message) => {
+      console.log(message);
+      toast.error(message);
+    });
+  }, []);
+
   return (
     <Router>
+      <ToastContainer autoClose={10000} />
       { loadingContext.isLoading && <div className="loading"><img src={loaderIcon} alt="loader icon" /></div> }
       <Header />
       <Routes>

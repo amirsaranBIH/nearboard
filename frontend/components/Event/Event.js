@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Emitter from '../../emitter';
 
 import NearboardContext from '../../store/NearboardContext';
@@ -47,7 +48,8 @@ export default function Event() {
           if (!confirm("Are you sure you want to delete question?")) {
             return;
           }
-          nearboardContext.contract.deleteQuestion(question.id).then(res => {
+          nearboardContext.contract.deleteQuestion(question.id).then(() => {
+            toast.success("Successfully deleted question");
             setAllQuestions(allQuestions.filter(q => q.id !== question.id));
             setQuestions(questions.filter(q => q.id !== question.id));
           });

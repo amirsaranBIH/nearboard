@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext } from "react";
 import { Nearboard } from "../near-interface";
 import LoadingContext from "./LoadingContext";
 

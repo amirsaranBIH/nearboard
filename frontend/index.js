@@ -4,7 +4,6 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 
 // NEAR
-import { Nearboard } from './near-interface';
 import { Wallet } from './near-wallet';
 import { LoadingContextProvider } from './store/LoadingContext';
 import { NearboardContextProvider } from './store/NearboardContext';

@@ -8,6 +8,7 @@ import Button from '../partials/Button/Button';
 import addIcon from '../../assets/icons/add.svg';
 
 import './CreateProject.css';
+import { toast } from 'react-toastify';
 
 export default function CreateProject() {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ export default function CreateProject() {
     };
 
     nearboardContext.contract.createProject(data).then(res => {
+      toast.success("Successfully created project");
       navigate(`/project/${res.id}/update`);
     });
   }

@@ -252,6 +252,18 @@ class Nearboard {
     }
   }
 
+  validateQuestion(question: Question) {
+    const errorMessages = [];
+
+    if (question.question.length < 3) {
+      errorMessages.push("Question must be at least 3 characters");
+    }
+
+    if (errorMessages.length > 0) {
+        throw Error(errorMessages.join(", "));
+    }
+  }
+
   @call({})
   createProject({ name, description, websiteUrl, logoUrl }: CreateProjectParams): Project {
     if (near.accountBalance() < CREATE_PROJECT_MINIMUM_NEAR) {
@@ -411,6 +423,8 @@ class Nearboard {
       ]
     };
 
+    this.validateQuestion(newQuestion);
+
     this.questions.set(newQuestion.id, newQuestion);
 
     return newQuestion;
@@ -424,8 +438,8 @@ class Nearboard {
       throw Error("Only asker can update question");
     }
 
-    if ((currentQuestion.timestamp + BigInt(1800)) > near.blockTimestamp()) {
-      throw Error("Cannot update question after 30 minutes");
+    if (currentQuestion.votes.length >= 50) {
+      throw Error("Cannot update question after it has reached 50 votes");
     }
 
     const newQuestion: Question = {
@@ -436,6 +450,8 @@ class Nearboard {
       timestamp: currentQuestion.timestamp,
       votes: currentQuestion.votes,
     };
+
+    this.validateQuestion(newQuestion);
 
     this.questions.set(newQuestion.id, newQuestion);
   }

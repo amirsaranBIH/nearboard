@@ -5,6 +5,7 @@ import addIcon from '../../../assets/icons/add.svg';
 
 import './AskQuestion.css';
 import Button from '../Button/Button';
+import { toast } from 'react-toastify';
 
 export default function AskQuestion({ projectId, eventId, onCreateQuestion }) {
   const nearboardContext = useContext(NearboardContext);
@@ -27,6 +28,7 @@ export default function AskQuestion({ projectId, eventId, onCreateQuestion }) {
     }
 
     nearboardContext.contract.createQuestion({ projectId, eventId, question: askQuestionInputRef.current.value }).then(res => {
+      toast.success("Successfully created question");
       onCreateQuestion(res);
       askQuestionInputRef.current.value = "";
     });
