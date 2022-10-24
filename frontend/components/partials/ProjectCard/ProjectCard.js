@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 
 import { Link } from "react-router-dom";
+import { toast } from 'react-toastify';
 
 import NearboardContext from '../../../store/NearboardContext';
 import ExternalLink from '../ExternalLink/ExternalLink';
@@ -20,7 +21,8 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
   }, []);
 
   function followProject() {
-    nearboardContext.contract.followProject(project.id).then(res => {
+    toast.success("Successfully followed project");
+    nearboardContext.contract.followProject(project.id).then(() => {
       setFollowers(followers.concat([nearboardContext.wallet.accountId]));
       if (onFollow) {
         onFollow(project);
@@ -29,7 +31,8 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
   }
 
   function unfollowProject() {
-    nearboardContext.contract.unfollowProject(project.id).then(res => {
+    toast.success("Successfully unfollowed project");
+    nearboardContext.contract.unfollowProject(project.id).then(() => {
       setFollowers(followers.filter(follower => follower !== nearboardContext.wallet.accountId));
       if (onUnfollow) {
         onUnfollow(project);

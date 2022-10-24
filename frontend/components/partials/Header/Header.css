@@ -1,0 +1,21 @@
+.update-project-info-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.update-project-form {
+    margin-bottom: 2em;
+}
+
+.update-project .events {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1em;
+    margin-bottom: 1em;
+}
+
+.update-project .events .event {
+    padding: 1em;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px 0px #00000040;
+}

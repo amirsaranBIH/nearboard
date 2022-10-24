@@ -7,6 +7,7 @@ import Button from '../Button/Button';
 import editIcon from '../../../assets/icons/edit.svg';
 
 import './UpdateQuestionModal.css';
+import { toast } from 'react-toastify';
 
 export default function UpdateQuestionModal({ onQuestionUpdate }) {
   const nearboardContext = useContext(NearboardContext);
@@ -40,7 +41,8 @@ export default function UpdateQuestionModal({ onQuestionUpdate }) {
       return;
     }
 
-    nearboardContext.contract.updateQuestion({ id: question.id, question: question.question }).then(res => {
+    nearboardContext.contract.updateQuestion({ id: question.id, question: question.question }).then(() => {
+      toast.success("Successfully updated question");
       onQuestionUpdate(question);
       Emitter.emit("SET_SHOW_MODAL", false);
     });
@@ -80,7 +82,7 @@ export default function UpdateQuestionModal({ onQuestionUpdate }) {
   }
 
   return (
-    <Modal heading={"Update Question"} tooltip={"Questions can only be updated for the first 30 minutes"}>
+    <Modal heading={"Update Question"} tooltip={"Questions can't be updated if they reach 50 votes"}>
       <div className="update-question">
         <form onSubmit={onSubmitHandler}>
           <div className="form-field">
