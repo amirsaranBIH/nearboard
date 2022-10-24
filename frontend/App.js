@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Home from "./components/Home/Home.js";
 import Projects from "./components/Projects/Projects.js";
@@ -15,11 +15,11 @@ import UpdateProject from "./components/UpdateProject/UpdateProject.js";
 import UpdateEvent from './components/UpdateEvent/UpdateEvent.js';
 
 import './assets/global.css';
-import logo from "./assets/nearboard-horizontal.png"
 import loaderIcon from "./assets/icons/loader.svg"
 
 import NearboardContext from './store/NearboardContext.js';
 import LoadingContext from './store/LoadingContext.js';
+import Header from './components/partials/Header/Header.js';
 
 
 export default function App() {
@@ -29,15 +29,7 @@ export default function App() {
   return (
     <Router>
       { loadingContext.isLoading && <div className="loading"><img src={loaderIcon} alt="loader icon" /></div> }
-      <header className="header">
-        <Link className="logo" to="/"><img src={logo} alt="Nearboard logo" /></Link>
-        <nav className="navigation">
-          <Link className="link" to="/projects">Projects</Link>
-          <Link className="link" to="/events">Events</Link>
-          <Link className="link" to="/faq">FAQ</Link>
-          {nearboardContext.isSignedIn ? <Link to="/profile"><span className="btn btn--small">PROFILE</span></Link> : <span className="btn btn--small" onClick={() => {nearboardContext.wallet.signIn()}}>CONNECT</span>}
-        </nav>
-      </header>
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/projects" element={<Projects />} />
