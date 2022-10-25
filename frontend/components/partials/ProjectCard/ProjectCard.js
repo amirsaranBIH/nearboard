@@ -21,8 +21,8 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
   }, []);
 
   function followProject() {
-    toast.success("Successfully followed project");
     nearboardContext.contract.followProject(project.id).then(() => {
+      toast.success("Successfully followed project");
       setFollowers(followers.concat([nearboardContext.wallet.accountId]));
       if (onFollow) {
         onFollow(project);
@@ -31,8 +31,8 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
   }
 
   function unfollowProject() {
-    toast.success("Successfully unfollowed project");
     nearboardContext.contract.unfollowProject(project.id).then(() => {
+      toast.success("Successfully unfollowed project");
       setFollowers(followers.filter(follower => follower !== nearboardContext.wallet.accountId));
       if (onUnfollow) {
         onUnfollow(project);

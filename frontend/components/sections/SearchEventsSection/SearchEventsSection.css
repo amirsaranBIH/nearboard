@@ -1,0 +1,5 @@
+.event-search .search-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
