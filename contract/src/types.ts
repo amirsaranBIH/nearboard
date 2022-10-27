@@ -31,10 +31,5 @@ export type Question = {
     asker: AccountId;
     eventId: string;
     timestamp: bigint;
-    votes: Vote[];
-};
-
-export type Vote = {
-    voter: AccountId;
-    nearRepresented: string;
+    votes: AccountId[];
 };

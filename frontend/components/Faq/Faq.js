@@ -45,18 +45,6 @@ const questions = [
       <p>This prevents askers from changing their question after receiving a large number of votes.</p>
     `
   },
-  {
-    question: "What are the token requirements?",
-    answer: `
-      <p>The available account balance of the account that is performing an action must be:</p>
-      <ul>
-        <li>Create a project: <b>100 NEAR</b></li>
-        <li>Create an event: <b>100 NEAR</b></li>
-        <li>Ask a question: <b>10 NEAR</b></li>
-        <li>Vote for question: <b>1 NEAR</b></li>
-      </ul>
-    `
-  },
 ];
 
 export default function Faq() {

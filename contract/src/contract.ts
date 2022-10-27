@@ -1,4 +1,4 @@
-import { NearBindgen, near, call, view, UnorderedMap, UnorderedSet } from "near-sdk-js";
+import { NearBindgen, near, call, view, UnorderedMap, UnorderedSet, validateAccountId, NearPromise } from "near-sdk-js";
 import type {
   CreateEventParams,
   CreateProjectParams,
@@ -26,12 +26,7 @@ import type {
   UpdateQuestionParams,
   VoteParams
 } from "./params";
-import { Project, Event, Question, Vote, EventType } from "./types";
-
-const CREATE_PROJECT_MINIMUM_NEAR: bigint = BigInt(100_000_000_000_000_000_000_000_000n); // 100 NEAR
-const CREATE_EVENT_MINIMUM_NEAR: bigint = BigInt(100_000_000_000_000_000_000_000_000n); // 100 NEAR
-const CREATE_QUESTION_MINIMUM_NEAR: bigint = BigInt(10_000_000_000_000_000_000_000_000n); // 10 NEAR
-const VOTE_MINIMUM_NEAR: bigint = BigInt(1_000_000_000_000_000_000_000_000n); // 1 NEAR
+import { Project, Event, Question, EventType } from "./types";
 
 @NearBindgen({})
 class Nearboard {
@@ -57,6 +52,10 @@ class Nearboard {
 
   @view({})
   getUserProjects({ accountId }: GetUserProjectsParams): Project[] {
+    if (!validateAccountId(accountId)) {
+      throw Error("Invalid account id");
+    }
+
     return this.projects.toArray().map(x => x[1]).filter(project => project.owner === accountId);
   }
   
@@ -177,6 +176,10 @@ class Nearboard {
 
   @view({})
   getUserFollows({ accountId }: GetUserFollowsParams): Project[] {
+    if (!validateAccountId(accountId)) {
+      throw Error("Invalid account id");
+    }
+
     return this.follows.toArray().filter(follow => follow.split(":")[0] === accountId).map(follow => {
       return this.projects.get(follow.split(":")[1]);
     });
@@ -266,10 +269,6 @@ class Nearboard {
 
   @call({})
   createProject({ name, description, websiteUrl, logoUrl }: CreateProjectParams): Project {
-    if (near.accountBalance() < CREATE_PROJECT_MINIMUM_NEAR) {
-      throw Error(`Your account balance needs to be minimum ${CREATE_PROJECT_MINIMUM_NEAR} yohtoNEAR to create a project`);
-    }
-
     this.projectId++;
 
     const project: Project = {
@@ -337,10 +336,6 @@ class Nearboard {
 
   @call({})
   createEvent({ projectId, name, eventUrl, startDate, eventType }: CreateEventParams): Event {
-    if (near.accountBalance() < CREATE_EVENT_MINIMUM_NEAR) {
-      throw Error(`Your account balance needs to be minimum ${CREATE_EVENT_MINIMUM_NEAR} yohtoNEAR to create an event`);
-    }
-
     this.eventId++;
     
     const event: Event = {
@@ -402,10 +397,6 @@ class Nearboard {
 
   @call({})
   createQuestion({ eventId, question }: CreateQuestionParams): Question {
-    if (near.accountBalance() < CREATE_QUESTION_MINIMUM_NEAR) {
-      throw Error(`Your account balance needs to be minimum ${CREATE_QUESTION_MINIMUM_NEAR} yohtoNEAR to create a question`);
-    }
-
     this.questionId++;
     const asker = near.predecessorAccountId();
     
@@ -415,12 +406,7 @@ class Nearboard {
       question,
       eventId,
       timestamp: near.blockTimestamp(),
-      votes: [
-        {
-          voter: near.predecessorAccountId(),
-          nearRepresented: near.accountBalance().toString(),
-        }
-      ]
+      votes: [near.predecessorAccountId()]
     };
 
     this.validateQuestion(newQuestion);
@@ -469,29 +455,20 @@ class Nearboard {
 
   @call({})
   vote({ questionId }: VoteParams) {
-    if (near.accountBalance() < VOTE_MINIMUM_NEAR) {
-      throw Error(`Your account balance needs to be minimum ${VOTE_MINIMUM_NEAR} yohtoNEAR to vote`);
-    }
-    
     const question = this.questions.get(questionId);
 
-    if (question.votes.some(vote => vote.voter === near.predecessorAccountId())) {
+    if (question.votes.some(vote => vote === near.predecessorAccountId())) {
       throw Error("Already voted for this question");
     }
 
-    const vote: Vote = {
-      voter: near.predecessorAccountId(),
-      nearRepresented: near.accountBalance().toString(),
-    };
-
-    question.votes.push(vote);
+    question.votes.push(near.predecessorAccountId());
     this.questions.set(question.id, question);
   }
 
   @call({})
   unvote({ questionId }: UnvoteParams) {
     const question = this.questions.get(questionId);
-    question.votes = question.votes.filter(vote => vote.voter !== near.predecessorAccountId());
+    question.votes = question.votes.filter(vote => vote !== near.predecessorAccountId());
     this.questions.set(question.id, question);
   }
 

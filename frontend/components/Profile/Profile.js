@@ -43,6 +43,7 @@ export default function Profile() {
 
   function signOut() {
     nearboardContext.wallet.signOut();
+    nearboardContext.setIsSignedIn(false);
     navigate("/");
   }
 

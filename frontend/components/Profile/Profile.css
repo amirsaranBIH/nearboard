@@ -3,6 +3,12 @@
     margin-bottom: 1em;
 }
 
+.account-id .external-link span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .profile-button {
     display: flex;
     gap: .5em;
