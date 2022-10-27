@@ -10,18 +10,19 @@ import MoreOptions from '../MoreOptions/MoreOptions';
 import './Question.css';
 import { toast } from 'react-toastify';
 
-export default function Question({ event, question, options }) {
+export default function Question({ event, question, options, onVote, onUnvote }) {
   const nearboardContext = useContext(NearboardContext);
   function vote() {
     nearboardContext.contract.vote(question.id).then(() => {
       toast.success("Successfully voted");
-      console.log(res);
+      onVote(question);
     });
   }
 
   function unvote() {
     nearboardContext.contract.unvote(question.id).then(() => {
       toast.success("Successfully unvoted");
+      onUnvote(question);
     });
   }
 

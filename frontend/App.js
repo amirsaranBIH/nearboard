@@ -32,7 +32,6 @@ export default function App() {
 
   useEffect(() => {
     Emitter.on("TOAST_ERROR_MESSAGE", (message) => {
-      console.log(message);
       toast.error(message);
     });
   }, []);

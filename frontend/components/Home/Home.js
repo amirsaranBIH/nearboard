@@ -72,6 +72,36 @@ export default function Home() {
     }));
   }
 
+  function onVote(question) {
+    setAllQuestions(allQuestions.map(q => {
+      if (q.id === question.id && !q.votes.includes(nearboardContext.wallet.accountId)) {
+        q.votes.push(nearboardContext.wallet.accountId);
+      }
+      return q;
+    }));
+    setQuestions(questions.map(q => {
+      if (q.id === question.id  && !q.votes.includes(nearboardContext.wallet.accountId)) {
+        q.votes.push(nearboardContext.wallet.accountId);
+      }
+      return q;
+    }));
+  }
+
+  function onUnvote(question) {
+    setAllQuestions(allQuestions.map(q => {
+      if (q.id === question.id) {
+        q.votes = q.votes.filter(voter => voter !== nearboardContext.wallet.accountId);
+      }
+      return q;
+    }));
+    setQuestions(questions.map(q => {
+      if (q.id === question.id) {
+        q.votes = q.votes.filter(voter => voter !== nearboardContext.wallet.accountId);
+      }
+      return q;
+    }));
+  }
+
   return (
     <div>
       <div className="wrapper">
@@ -95,7 +125,7 @@ export default function Home() {
             <MainHeading heading={"Top Questions"} tooltip={"Top questions from upcoming events"} />
             <div className="questions">
               {questions.length > 0 ? questions.map(question => {
-                return <Question key={question.id} question={question} event={question.event} options={getQuestionOptions(question)} />
+                return <Question key={question.id} question={question} event={question.event} options={getQuestionOptions(question)} onVote={onVote} onUnvote={onUnvote} />
               }) : <div className="no-content">No questions asked</div>}
             </div>
           </div>
