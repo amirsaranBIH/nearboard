@@ -13,7 +13,19 @@ import { toast } from 'react-toastify';
 export default function Question({ event, question, options, onVote, onUnvote }) {
   const nearboardContext = useContext(NearboardContext);
   function vote() {
+    if (!nearboardContext.isSignedIn) {
+      toast.error("Not signed in");
+      nearboardContext.wallet.signIn();
+      return;
+    }
+
     nearboardContext.contract.vote(question.id).then(() => {
+      if (!nearboardContext.isSignedIn) {
+        toast.error("Not signed in");
+        nearboardContext.wallet.signIn();
+        return;
+      }
+
       toast.success("Successfully voted");
       onVote(question);
     });
