@@ -27,6 +27,12 @@ export default function AskQuestion({ projectId, eventId, onCreateQuestion }) {
       return;
     }
 
+    if (!nearboardContext.isSignedIn) {
+      toast.error("Not signed in");
+      nearboardContext.wallet.signIn();
+      return;
+    }
+
     nearboardContext.contract.createQuestion({ projectId, eventId, question: askQuestionInputRef.current.value }).then(res => {
       toast.success("Successfully created question");
       onCreateQuestion(res);

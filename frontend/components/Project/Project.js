@@ -59,7 +59,7 @@ export default function Project() {
           {upcomingEvent ?
           <div className="section">
             <MainHeading heading={"Questions For " + upcomingEvent.name  + " Event"} tooltip={"Top questions will be answered on the upcoming " + upcomingEvent.name  + " event"} />
-            <AskQuestion projectId={project.id} eventId={upcomingEvent.id} onCreateQuestion={onCreateQuestionHandler} />
+            {upcomingEvent.startDate > new Date().getTime() && <AskQuestion projectId={project.id} eventId={upcomingEvent.id} onCreateQuestion={onCreateQuestionHandler} />}
             <div className="questions">
               {upcomingEventQuestions.length > 0 ? upcomingEventQuestions.map(question => {
                 return <Question key={question.id} question={question} event={upcomingEvent} />

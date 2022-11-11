@@ -13,10 +13,14 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
   const nearboardContext = useContext(NearboardContext);
 
   const [followers, setFollowers] = useState([]);
+  const [upcomingEvent, setUpcomingEvent] = useState(null);
 
   useEffect(() => {
     nearboardContext.contract.getProjectFollowers(project.id).then(res => {
       setFollowers(res);
+    });
+    nearboardContext.contract.getProjectUpcomingEvent(project.id).then(res => {
+      setUpcomingEvent(res);
     });
   }, []);
 
@@ -47,12 +51,16 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
         <div className="project-card-info">
           <div className="project-card-name"><Link to={"/project/" + project.id}>{project.name}</Link></div>
           <ExternalLink to={project.websiteUrl} />
+          {upcomingEvent && <span className="project-status">
+            <span className="tag">Event Soon</span>
+          </span>}
         </div>
       </div>
       <div className="project-followers">
         <div>{followers.length} Followers</div>
-        {followers.includes(nearboardContext.wallet.accountId) ? 
-        <button className="btn btn--small btn--secondary" type="button" onClick={unfollowProject}>Following</button> : 
+        {nearboardContext.isSignedIn && followers.includes(nearboardContext.wallet.accountId) && 
+        <button className="btn btn--small btn--secondary" type="button" onClick={unfollowProject}>Following</button>}
+        {nearboardContext.isSignedIn && !followers.includes(nearboardContext.wallet.accountId) &&
         <button className="btn btn--small" type="button" onClick={followProject}>Follow</button>}
       </div>
       {options && <MoreOptions options={options} />}

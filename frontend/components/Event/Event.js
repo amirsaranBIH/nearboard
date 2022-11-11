@@ -96,7 +96,7 @@ export default function Event() {
         <main className="main">
           <div className="section">
             <MainHeading heading={"Questions for " + event.name + " Event"} tooltip={"Top questions will be answered on the " + event.name + " event"} />
-            <AskQuestion projectId={event.projectId} eventId={eventId} onCreateQuestion={onCreateQuestionHandler} />
+            {event.startDate > new Date().getTime() && <AskQuestion projectId={event.projectId} eventId={eventId} onCreateQuestion={onCreateQuestionHandler} />}
             <div className="questions">
               {questions.length > 0 ? questions.map(question => {
                 return <Question key={question.id} question={question} event={event} options={getQuestionOptions(question)} />;

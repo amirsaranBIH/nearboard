@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ExternalLink from '../ExternalLink/ExternalLink';
 import MoreOptions from '../MoreOptions/MoreOptions';
 

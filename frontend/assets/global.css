@@ -193,7 +193,7 @@ select.input {
 }
 
 .tag {
-  font-size: 12px;
+  font-size: 10px;
   padding: .25em .75em;
   border-radius: 100px;
   background-color: var(--primary);

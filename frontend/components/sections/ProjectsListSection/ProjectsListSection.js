@@ -11,6 +11,9 @@ export default function ProjectsListSection({ projects }) {
               return <div key={project.id}>
                 <img src={project.logoUrl} alt={project.name + " logo"} />
                 <Link to={"/project/" + project.id} className="link">{project.name}</Link>
+                {project.hasUpcomingEvent && <div className="project-status">
+                  <span className="tag">Event Soon</span>
+                </div>}
               </div>;
             }): <div className="no-content">Not following any project</div>}
         </div>
