@@ -1,4 +1,4 @@
-import { NearBindgen, near, call, view, UnorderedMap, UnorderedSet, validateAccountId, NearPromise } from "near-sdk-js";
+import { NearBindgen, near, call, view, UnorderedMap, UnorderedSet, validateAccountId } from "near-sdk-js";
 import type {
   CreateEventParams,
   CreateProjectParams,
@@ -171,7 +171,12 @@ class Nearboard {
       return b.followers - a.followers;
     });
 
-    return projectFollowerCounts.splice(0, 5).map(x => this.getProject({ projectId: x.id }));
+    return projectFollowerCounts.splice(0, 5).map(x => {
+      return {
+        ...this.getProject({ projectId: x.id }),
+        hasUpcomingEvent: !!this.getProjectUpcomingEvent({ projectId: x.id })
+      }
+    });
   }
 
   @view({})
