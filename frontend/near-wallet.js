@@ -51,6 +51,11 @@ export class Wallet {
       ],
     });
 
+    this.walletSelector.on("signedIn", async ({ walletId, accounts }) => {
+      this.wallet = await this.walletSelector.wallet(walletId);
+      this.accountId = accounts[0].accountId;
+    });
+
     const isSignedIn = this.walletSelector.isSignedIn();
 
     if (isSignedIn) {
@@ -69,8 +74,8 @@ export class Wallet {
   }
 
   // Sign-out method
-  signOut() {
-    this.wallet.signOut();
+  async signOut() {
+    await this.wallet.signOut();
     this.wallet = this.accountId = this.createAccessKeyFor = null;
     window.location.replace(window.location.origin + window.location.pathname);
   }

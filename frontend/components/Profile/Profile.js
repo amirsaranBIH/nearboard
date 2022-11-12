@@ -41,8 +41,8 @@ export default function Profile() {
     nearboardContext.wallet.signIn();
   }
 
-  function signOut() {
-    nearboardContext.wallet.signOut();
+  async function signOut() {
+    await nearboardContext.wallet.signOut();
     nearboardContext.setIsSignedIn(false);
     navigate("/");
   }
