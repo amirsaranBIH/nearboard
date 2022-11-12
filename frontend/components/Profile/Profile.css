@@ -9,9 +9,24 @@
     text-overflow: ellipsis;
 }
 
-.profile-button {
+.profile-buttons {
     display: flex;
     gap: .5em;
+}
+
+.switch-account-button {
+    position: relative;
+}
+
+.switch-account-button img {
+    width: 30px;
+    background: white;
+    padding: 3px;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    border-radius: 50px;
+    border: 1px solid var(--grey);
 }
 
 .my-projects {

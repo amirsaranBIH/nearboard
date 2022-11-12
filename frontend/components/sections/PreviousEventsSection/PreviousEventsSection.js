@@ -22,8 +22,8 @@ export default function PreviousEventsSection() {
   return (
     <div className="section">
         <div className="heading">
-            <img src={calendarTickIcon} alt="calendar icon" />
-            <span>Previous Events</span>
+          <img src={calendarTickIcon} alt="calendar icon" />
+          <span>Previous Events</span>
         </div>
         <div className="previous-events">
             {events.length > 0 ? events.map(event => {

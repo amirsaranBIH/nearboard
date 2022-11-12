@@ -17,7 +17,7 @@ export default function Project() {
 
   const nearboardContext = useContext(NearboardContext);
 
-  const [project, setProject] = useState({});
+  const [project, setProject] = useState(null);
   const [upcomingEvent, setUpcomingEvent] = useState({});
   const [allUpcomingEventQuestions, setAllUpcomingEventQuestions] = useState([]);
   const [upcomingEventQuestions, setUpcomingEventQuestions] = useState([]);
@@ -58,12 +58,14 @@ export default function Project() {
         <main className="main">
           {upcomingEvent ?
           <div className="section">
-            <MainHeading heading={"Questions For " + upcomingEvent.name  + " Event"} tooltip={"Top questions will be answered on the upcoming " + upcomingEvent.name  + " event"} />
-            {upcomingEvent.startDate > new Date().getTime() && <AskQuestion projectId={project.id} eventId={upcomingEvent.id} onCreateQuestion={onCreateQuestionHandler} />}
-            <div className="questions">
-              {upcomingEventQuestions.length > 0 ? upcomingEventQuestions.map(question => {
-                return <Question key={question.id} question={question} event={upcomingEvent} />
-              }) : <div className="no-content">No questions asked</div>}
+            <div>
+              <MainHeading heading={"Questions For " + upcomingEvent.name  + " Event"} tooltip={"Top questions will be answered on the upcoming " + upcomingEvent.name  + " event"} />
+              {upcomingEvent.startDate > new Date().getTime() && <AskQuestion projectId={project.id} eventId={upcomingEvent.id} onCreateQuestion={onCreateQuestionHandler} />}
+              <div className="questions">
+                {upcomingEventQuestions.length > 0 ? upcomingEventQuestions.map(question => {
+                  return <Question key={question.id} question={question} event={upcomingEvent} />
+                }) : <div className="no-content">No questions asked</div>}
+              </div>
             </div>
           </div> :
           <div className="section">

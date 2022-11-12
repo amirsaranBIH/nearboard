@@ -24,7 +24,7 @@ export default function UpdateProject() {
 
   const [errors, setErrors] = useState({});
   const [dirty, setDirty] = useState(false);
-  const [project, setProject] = useState({});
+  const [project, setProject] = useState(null);
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -159,54 +159,60 @@ export default function UpdateProject() {
     ]
   }
 
+  if (!project) {
+    return null;
+  }
+
   return (
     <div className="update-project">
       <div className="wrapper">
         <aside className="aside">
           <div className="section">
-              <ProjectCard project={project} />
+            <ProjectCard project={project} />
           </div>
           <FaqSection />
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"Update Aurora Project"} tooltip={"Update project information"} />
-            <form className="form update-project-form" onSubmit={onSubmitHandler}>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Name" value={project.name} onInput={onProjectNameChangeHandler} />
-                {hasErrors("name") && (
-                  <span className="error-message">{getError("name")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Description (max. 100 characters)" value={project.description} onInput={onProjectDescriptionChangeHandler} />
-                {hasErrors("description") && (
-                  <span className="error-message">{getError("description")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Website URL" value={project.websiteUrl} onInput={onProjectWebsiteUrlChangeHandler} />
-                {hasErrors("websiteUrl") && (
-                  <span className="error-message">{getError("websiteUrl")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Logo image URL" value={project.logoUrl} onInput={onProjectLogoUrlChangeHandler} />
-                {hasErrors("logoUrl") && (
-                  <span className="error-message">{getError("logoUrl")}</span>
-                )}
-              </div>
-              <div className="update-project-info-buttons">
-                <Button icon={editIcon} type={"submit"}>UPDATE PROJECT</Button>
-                <Button icon={trashIcon} color={"secondary"} onClick={deleteProject}>DELETE PROJECT</Button>
-              </div>
-            </form>
-            <MainHeading heading={"Aurora Events"} tooltip={"Create and update event information"} />
-            {events.length > 0 ? <div className="events">
-              {events.map(event => {
-                return <EventCard key={event.id} event={event} options={getEventOptions(event)} />;
-              })}
-            </div> : <div className="no-content">No events created</div>}
+            <div>
+              <MainHeading heading={"Update Aurora Project"} tooltip={"Update project information"} />
+              <form className="form update-project-form" onSubmit={onSubmitHandler}>
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Name" value={project.name} onInput={onProjectNameChangeHandler} />
+                  {hasErrors("name") && (
+                    <span className="error-message">{getError("name")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Description (max. 100 characters)" value={project.description} onInput={onProjectDescriptionChangeHandler} />
+                  {hasErrors("description") && (
+                    <span className="error-message">{getError("description")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Website URL" value={project.websiteUrl} onInput={onProjectWebsiteUrlChangeHandler} />
+                  {hasErrors("websiteUrl") && (
+                    <span className="error-message">{getError("websiteUrl")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Logo image URL" value={project.logoUrl} onInput={onProjectLogoUrlChangeHandler} />
+                  {hasErrors("logoUrl") && (
+                    <span className="error-message">{getError("logoUrl")}</span>
+                  )}
+                </div>
+                <div className="update-project-info-buttons">
+                  <Button icon={editIcon} type={"submit"}>UPDATE PROJECT</Button>
+                  <Button icon={trashIcon} color={"secondary"} onClick={deleteProject}>DELETE PROJECT</Button>
+                </div>
+              </form>
+              <MainHeading heading={"Aurora Events"} tooltip={"Create and update event information"} />
+              {events.length > 0 ? <div className="events">
+                {events.map(event => {
+                  return <EventCard key={event.id} event={event} options={getEventOptions(event)} />;
+                })}
+              </div> : <div className="no-content">No events created</div>}
+            </div>
             <Link to={"/project/" + project.id + "/create-event"}><Button icon={addIcon}>CREATE EVENT</Button></Link>
           </div>
         </main>

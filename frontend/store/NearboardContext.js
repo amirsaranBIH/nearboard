@@ -14,6 +14,10 @@ export function NearboardContextProvider({ children, isSignedInParam, wallet }) 
 
     const contract = new Nearboard({ contractId: process.env.CONTRACT_NAME, walletToUse: wallet, loadingContext });
 
+    wallet.walletSelector.on("signedIn", () => {
+        setIsSignedIn(true);
+    });
+
     const context = {
         wallet,
         contract,

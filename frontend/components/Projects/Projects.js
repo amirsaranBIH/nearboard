@@ -33,13 +33,15 @@ export default function Projects() {
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"All Projects"} tooltip={"List of all projects that create events"} />
-            {projects.length > 0 ? <div className="all-projects">
-              {projects.map(project => {
-                return <ProjectCard key={project.id} project={project} />
-              })}
-            </div> 
-            : <div className="no-content">No projects created</div>}
+            <div>
+              <MainHeading heading={"All Projects"} tooltip={"List of all projects that create events"} />
+              {projects.length > 0 ? <div className="all-projects">
+                {projects.map(project => {
+                  return <ProjectCard key={project.id} project={project} />
+                })}
+              </div> 
+              : <div className="no-content">No projects created</div>}
+            </div>
           </div>
         </main>
       </div>

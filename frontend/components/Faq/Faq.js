@@ -68,10 +68,12 @@ export default function Faq() {
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"Frequently Asked Questions"} tooltip={"Here you may find the answer to your questions about Nearboard"} />
-            <div className="selected-question answer-question">{questions[selectedQuestion].question}</div>
-            <div className="question-answer">
-              <div dangerouslySetInnerHTML={{ __html: questions[selectedQuestion].answer }} />
+            <div>
+              <MainHeading heading={"Frequently Asked Questions"} tooltip={"Here you may find the answer to your questions about Nearboard"} />
+              <div className="selected-question answer-question">{questions[selectedQuestion].question}</div>
+              <div className="question-answer">
+                <div dangerouslySetInnerHTML={{ __html: questions[selectedQuestion].answer }} />
+              </div>
             </div>
           </div>
         </main>

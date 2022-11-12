@@ -41,8 +41,8 @@ export default function Profile() {
     nearboardContext.wallet.signIn();
   }
 
-  function signOut() {
-    nearboardContext.wallet.signOut();
+  async function signOut() {
+    await nearboardContext.wallet.signOut();
     nearboardContext.setIsSignedIn(false);
     navigate("/");
   }
@@ -101,8 +101,8 @@ export default function Profile() {
               <span>Logged in as</span>
             </div>
             <div className="account-id"><ExternalLink text={nearboardContext.wallet.accountId} to={"https://explorer.testnet.near.org/accounts/" + nearboardContext.wallet.accountId} /></div>
-            <div className="profile-button">
-              <button className="btn" onClick={switchWallet}>Switch wallet</button>
+            <div className="profile-buttons">
+              <button className="btn switch-account-button" onClick={switchWallet}><img src={nearboardContext.wallet.wallet.metadata.iconUrl} alt={nearboardContext.wallet.wallet.metadata.name + " icon"} /> Switch wallet</button>
               <button className="btn btn--secondary" onClick={signOut}>Log out</button>
             </div>
           </div>
@@ -118,14 +118,16 @@ export default function Profile() {
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"My Projects"} tooltip={"List of my projects where I can create events"} />
-            {projects.length > 0 ? 
-            <div className="my-projects">
-              {projects.map(project => {
-                return <ProjectCard key={project.id} project={project} options={getProjectOptions(project)} onFollow={onFollow} onUnfollow={onUnfollow} />
-              })}
+            <div>
+              <MainHeading heading={"My Projects"} tooltip={"List of my projects where I can create events"} />
+              {projects.length > 0 ? 
+              <div className="my-projects">
+                {projects.map(project => {
+                  return <ProjectCard key={project.id} project={project} options={getProjectOptions(project)} onFollow={onFollow} onUnfollow={onUnfollow} />
+                })}
+              </div>
+              : <div className="no-content">No projects created</div>}
             </div>
-            : <div className="no-content">No projects created</div>}
             
             <Link to="/create-project"><Button icon={addIcon}>CREATE PROJECT</Button></Link>
           </div>

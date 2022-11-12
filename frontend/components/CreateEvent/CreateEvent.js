@@ -18,7 +18,7 @@ export default function CreateEvent() {
 
   const [errors, setErrors] = useState({});
   const [dirty, setDirty] = useState(false);
-  const [project, setProject] = useState({});
+  const [project, setProject] = useState(null);
 
   useEffect(() => {
     nearboardContext.contract.getProject(id).then(res => {
@@ -31,9 +31,7 @@ export default function CreateEvent() {
   const eventDateUrlInputRef = useRef(null);
   const eventTypeInputRef = useRef(null);
 
-  function onSubmitHandler(e) {
-    e.preventDefault();
-
+  function onSubmitHandler() {
     setDirty(true);
 
     const isValid = verifyFormValues();
@@ -109,6 +107,10 @@ export default function CreateEvent() {
     }
   }
 
+  if (!project) {
+    return null;
+  }
+
   return (
     <div>
       <div className="wrapper">
@@ -120,41 +122,43 @@ export default function CreateEvent() {
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"Create Aurora Event"} tooltip={"Fill in the form to create a event where you will answer questions"} />
-            <form className="form" onSubmit={onSubmitHandler}>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Name" ref={eventNameInputRef} onChange={checkErrors} />
-                {hasErrors("name") && (
-                  <span className="error-message">{getError("name")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Event URL" ref={eventUrlInputRef} onChange={checkErrors} />
-                {hasErrors("eventUrl") && (
-                  <span className="error-message">{getError("eventUrl")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="date" placeholder="Event Date" ref={eventDateUrlInputRef} onChange={checkErrors} />
-                {hasErrors("startDate") && (
-                  <span className="error-message">{getError("startDate")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <select className="input" ref={eventTypeInputRef} onChange={checkErrors}>
-                  <option value="LiveEvent">Live Event</option>
-                  <option value="OnlineEvent">Online Event</option>
-                  <option value="AMA">AMA</option>
-                  <option value="Podcast">Podcast</option>
-                </select>
-                {hasErrors("eventType") && (
-                  <span className="error-message">{getError("eventType")}</span>
-                )}
-              </div>
-              <div>
-                <Button icon={addIcon} type={"submit"}>CREATE EVENT</Button>
-              </div>
-            </form>
+            <div>
+              <MainHeading heading={"Create Aurora Event"} tooltip={"Fill in the form to create a event where you will answer questions"} />
+              <form className="form">
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Name" ref={eventNameInputRef} onChange={checkErrors} />
+                  {hasErrors("name") && (
+                    <span className="error-message">{getError("name")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Event URL" ref={eventUrlInputRef} onChange={checkErrors} />
+                  {hasErrors("eventUrl") && (
+                    <span className="error-message">{getError("eventUrl")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="date" placeholder="Event Date" ref={eventDateUrlInputRef} onChange={checkErrors} />
+                  {hasErrors("startDate") && (
+                    <span className="error-message">{getError("startDate")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <select className="input" ref={eventTypeInputRef} onChange={checkErrors}>
+                    <option value="LiveEvent">Live Event</option>
+                    <option value="OnlineEvent">Online Event</option>
+                    <option value="AMA">AMA</option>
+                    <option value="Podcast">Podcast</option>
+                  </select>
+                  {hasErrors("eventType") && (
+                    <span className="error-message">{getError("eventType")}</span>
+                  )}
+                </div>
+              </form>
+            </div>
+            <div>
+              <Button icon={addIcon} type={"submit"} onClick={onSubmitHandler}>CREATE EVENT</Button>
+            </div>
           </div>
         </main>
       </div>
