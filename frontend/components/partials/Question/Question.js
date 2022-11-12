@@ -93,8 +93,8 @@ export default function Question({ event, question, options, onVote, onUnvote })
             <span className="question-vote-near-represented">{nearRepresented} NEAR represented</span>
           </div>
         </div>
-        {(options && nearboardContext.wallet.accountId === question.asker) && <MoreOptions options={options} />}
       </div>
+        {(options && nearboardContext.wallet.accountId === question.asker) && <MoreOptions options={options} />}
     </div>
   );
 }

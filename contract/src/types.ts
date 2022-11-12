@@ -30,6 +30,5 @@ export type Question = {
     question: string;
     asker: AccountId;
     eventId: string;
-    timestamp: bigint;
     votes: AccountId[];
 };

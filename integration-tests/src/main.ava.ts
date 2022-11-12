@@ -207,7 +207,7 @@ test('returns popular questions', async (t) => {
   const { contract } = t.context.accounts;
 
   const questions: any = await contract.view('getPopularQuestions');
-  t.is(questions.length, 3);
+  t.is(questions.length, 1);
 });
 
 test('returns top five popular projects', async (t) => {
@@ -357,7 +357,7 @@ test('deletes a question', async (t) => {
 
   const questions: any = await contract.view('getPopularQuestions', {});
 
-  t.is(questions.length, 2);
+  t.is(questions.length, 0);
 });
 
 test('votes', async (t) => {

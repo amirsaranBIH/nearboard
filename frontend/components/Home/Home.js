@@ -122,11 +122,13 @@ export default function Home() {
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"Hot Questions"} tooltip={"Top questions from upcoming events"} />
-            <div className="questions">
-              {questions.length > 0 ? questions.map(question => {
-                return <Question key={question.id} question={question} event={question.event} options={getQuestionOptions(question)} onVote={onVote} onUnvote={onUnvote} />
-              }) : <div className="no-content">No questions asked</div>}
+            <div>
+              <MainHeading heading={"Hot Questions"} tooltip={"Top questions from upcoming events"} />
+              <div className="questions">
+                {questions.length > 0 ? questions.map(question => {
+                  return <Question key={question.id} question={question} event={question.event} options={getQuestionOptions(question)} onVote={onVote} onUnvote={onUnvote} />
+                }) : <div className="no-content">No questions asked</div>}
+              </div>
             </div>
           </div>
         </main>

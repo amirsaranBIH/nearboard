@@ -142,7 +142,9 @@ class Nearboard {
   
   @view({})
   getPopularQuestions(): Question[] {
-    const questions = this.questions.toArray().map(x => x[1]);
+    const timestamp = near.blockTimestamp().toString();
+
+    const questions = this.questions.toArray().map(x => x[1]).filter(q => this.events.get(q.eventId).startDate.toString() >= timestamp);
 
     questions.sort((a, b) => {
       return b.votes.length - a.votes.length;
@@ -410,7 +412,6 @@ class Nearboard {
       asker,
       question,
       eventId,
-      timestamp: near.blockTimestamp(),
       votes: [near.predecessorAccountId()]
     };
 
@@ -438,7 +439,6 @@ class Nearboard {
       asker: currentQuestion.asker,
       question,
       eventId: currentQuestion.eventId,
-      timestamp: currentQuestion.timestamp,
       votes: currentQuestion.votes,
     };
 

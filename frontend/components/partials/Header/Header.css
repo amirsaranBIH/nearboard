@@ -1,21 +1,16 @@
-.update-project-info-buttons {
+.header .profile {
     display: flex;
-    justify-content: space-between;
+    gap: .5em;
+    align-items: center;
 }
 
-.update-project-form {
-    margin-bottom: 2em;
+.header .profile .profile-image {
+    padding: .35em;
+    border: 1px solid var(--grey);
+    border-radius: 100px;
 }
 
-.update-project .events {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1em;
-    margin-bottom: 1em;
-}
-
-.update-project .events .event {
-    padding: 1em;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px 0px #00000040;
+.header .profile img {
+    display: block;
+    width: 25px;
 }
