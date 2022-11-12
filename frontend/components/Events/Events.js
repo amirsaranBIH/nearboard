@@ -29,14 +29,16 @@ export default function Events() {
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"All Events"} tooltip={"List of upcoming and previous events"} />
-            {events && events.length > 0 ? 
-              <div className="events">
-                {events.map(event => {
-                  return <EventCard key={event.id} event={event} />;
-                })}
-              </div>
-            : <div className="no-content">No events</div>}
+            <div>
+              <MainHeading heading={"All Events"} tooltip={"List of upcoming and previous events"} />
+              {events && events.length > 0 ? 
+                <div className="events">
+                  {events.map(event => {
+                    return <EventCard key={event.id} event={event} />;
+                  })}
+                </div>
+              : <div className="no-content">No events</div>}
+            </div>
           </div>
         </main>
       </div>

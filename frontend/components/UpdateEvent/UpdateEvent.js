@@ -18,7 +18,7 @@ export default function UpdateEvent() {
 
   const [errors, setErrors] = useState({});
   const [dirty, setDirty] = useState(false);
-  const [project, setProject] = useState({});
+  const [project, setProject] = useState(null);
   const [event, setEvent] = useState({});
 
   useEffect(() => {
@@ -50,9 +50,7 @@ export default function UpdateEvent() {
     setEvent({ ...event, eventType: e.target.value });
   }
 
-  function onSubmitHandler(e) {
-    e.preventDefault();
-
+  function onSubmitHandler() {
     setDirty(true);
 
     const isValid = verifyFormValues();
@@ -129,41 +127,43 @@ export default function UpdateEvent() {
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"Update AMA Tuesday Event"} tooltip={"Fill in the form to update event"} />
-            <form className="form" onSubmit={onSubmitHandler}>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Name" value={event.name} onInput={onEventNameChangeHandler} />
-                {hasErrors("name") && (
-                  <span className="error-message">{getError("name")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Event URL" value={event.eventUrl} onInput={onEventUrlChangeHandler} />
-                {hasErrors("eventUrl") && (
-                  <span className="error-message">{getError("eventUrl")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="date" placeholder="Event Date" value={event.startDate ? new Date(Number(event.startDate)).toISOString().split('T')[0] : null} onChange={onEventStartDateChangeHandler} />
-                {hasErrors("startDate") && (
-                  <span className="error-message">{getError("startDate")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <select className="input" value={event.eventType} onChange={onEventTypeChangeHandler} >
-                  <option value="LiveEvent">Live Event</option>
-                  <option value="OnlineEvent">Online Event</option>
-                  <option value="AMA">AMA</option>
-                  <option value="Podcast">Podcast</option>
-                </select>
-                {hasErrors("eventType") && (
-                  <span className="error-message">{getError("eventType")}</span>
-                )}
-              </div>
-              <div>
-                <Button icon={editIcon} type={"submit"}>UPDATE EVENT</Button>
-              </div>
-            </form>
+            <div>
+              <MainHeading heading={"Update AMA Tuesday Event"} tooltip={"Fill in the form to update event"} />
+              <form className="form">
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Name" value={event.name} onInput={onEventNameChangeHandler} />
+                  {hasErrors("name") && (
+                    <span className="error-message">{getError("name")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Event URL" value={event.eventUrl} onInput={onEventUrlChangeHandler} />
+                  {hasErrors("eventUrl") && (
+                    <span className="error-message">{getError("eventUrl")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="date" placeholder="Event Date" value={event.startDate ? new Date(Number(event.startDate)).toISOString().split('T')[0] : null} onChange={onEventStartDateChangeHandler} />
+                  {hasErrors("startDate") && (
+                    <span className="error-message">{getError("startDate")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <select className="input" value={event.eventType} onChange={onEventTypeChangeHandler} >
+                    <option value="LiveEvent">Live Event</option>
+                    <option value="OnlineEvent">Online Event</option>
+                    <option value="AMA">AMA</option>
+                    <option value="Podcast">Podcast</option>
+                  </select>
+                  {hasErrors("eventType") && (
+                    <span className="error-message">{getError("eventType")}</span>
+                  )}
+                </div>
+              </form>
+            </div>
+            <div>
+              <Button icon={editIcon} type={"submit"} onClick={onSubmitHandler}>UPDATE EVENT</Button>
+            </div>
           </div>
         </main>
       </div>
