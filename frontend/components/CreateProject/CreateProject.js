@@ -23,9 +23,7 @@ export default function CreateProject() {
   const projectWebsiteUrlInputRef = useRef(null);
   const projectLogoImageUrlInputRef = useRef(null);
 
-  function onSubmitHandler(e) {
-    e.preventDefault();
-
+  function onSubmitHandler() {
     setDirty(true);
 
     const isValid = verifyFormValues();
@@ -113,36 +111,38 @@ export default function CreateProject() {
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"Create a Project"} tooltip={"Fill in the form to create the project"} />
-            <form className="form" onSubmit={onSubmitHandler}>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Name" ref={projectNameInputRef} onChange={checkErrors} />
-                {hasErrors("name") && (
-                  <span className="error-message">{getError("name")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Description (max. 100 characters)" ref={projectDescriptionInputRef} onChange={checkErrors} />
-                {hasErrors("description") && (
-                  <span className="error-message">{getError("description")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Website URL" ref={projectWebsiteUrlInputRef} onChange={checkErrors} />
-                {hasErrors("websiteUrl") && (
-                  <span className="error-message">{getError("websiteUrl")}</span>
-                )}
-              </div>
-              <div className="form-field">
-                <input className="input" type="text" placeholder="Logo image URL" ref={projectLogoImageUrlInputRef} onChange={checkErrors} />
-                {hasErrors("logoUrl") && (
-                  <span className="error-message">{getError("logoUrl")}</span>
-                )}
-              </div>
-              <div>
-                <Button icon={addIcon} type={"submit"}>CREATE PROJECT</Button>
-              </div>
-            </form>
+            <div>
+              <MainHeading heading={"Create a Project"} tooltip={"Fill in the form to create the project"} />
+              <form className="form">
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Name" ref={projectNameInputRef} onChange={checkErrors} />
+                  {hasErrors("name") && (
+                    <span className="error-message">{getError("name")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Description (max. 100 characters)" ref={projectDescriptionInputRef} onChange={checkErrors} />
+                  {hasErrors("description") && (
+                    <span className="error-message">{getError("description")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Website URL" ref={projectWebsiteUrlInputRef} onChange={checkErrors} />
+                  {hasErrors("websiteUrl") && (
+                    <span className="error-message">{getError("websiteUrl")}</span>
+                  )}
+                </div>
+                <div className="form-field">
+                  <input className="input" type="text" placeholder="Logo image URL" ref={projectLogoImageUrlInputRef} onChange={checkErrors} />
+                  {hasErrors("logoUrl") && (
+                    <span className="error-message">{getError("logoUrl")}</span>
+                  )}
+                </div>
+              </form>
+            </div>
+            <div>
+              <Button icon={addIcon} onClick={onSubmitHandler}>CREATE PROJECT</Button>
+            </div>
           </div>
         </main>
       </div>
