@@ -95,12 +95,14 @@ export default function Event() {
         </aside>
         <main className="main">
           <div className="section">
-            <MainHeading heading={"Questions for " + event.name + " Event"} tooltip={"Top questions will be answered on the " + event.name + " event"} />
-            {event.startDate > new Date().getTime() && <AskQuestion projectId={event.projectId} eventId={eventId} onCreateQuestion={onCreateQuestionHandler} />}
-            <div className="questions">
-              {questions.length > 0 ? questions.map(question => {
-                return <Question key={question.id} question={question} event={event} options={getQuestionOptions(question)} />;
-              }): <div className="no-content">No questions asked</div>}
+            <div>
+              <MainHeading heading={"Questions for " + event.name + " Event"} tooltip={"Top questions will be answered on the " + event.name + " event"} />
+              {event.startDate > new Date().getTime() && <AskQuestion projectId={event.projectId} eventId={eventId} onCreateQuestion={onCreateQuestionHandler} />}
+              <div className="questions">
+                {questions.length > 0 ? questions.map(question => {
+                  return <Question key={question.id} question={question} event={event} options={getQuestionOptions(question)} />;
+                }): <div className="no-content">No questions asked</div>}
+              </div>
             </div>
           </div>
         </main>

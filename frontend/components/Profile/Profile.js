@@ -102,7 +102,7 @@ export default function Profile() {
             </div>
             <div className="account-id"><ExternalLink text={nearboardContext.wallet.accountId} to={"https://explorer.testnet.near.org/accounts/" + nearboardContext.wallet.accountId} /></div>
             <div className="profile-buttons">
-              <button className="btn switch-account-button" onClick={switchWallet}><img src={nearboardContext.wallet.wallet.metadata.iconUrl} alt={nearboardContext.wallet.wallet.metadata.name + " icon"} /> Switch wallet</button>
+              <button className="btn" onClick={switchWallet}>Switch wallet</button>
               <button className="btn btn--secondary" onClick={signOut}>Log out</button>
             </div>
           </div>

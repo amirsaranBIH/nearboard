@@ -31,7 +31,16 @@ export default function Header() {
           <Link className="link" to="/projects">Projects</Link>
           <Link className="link" to="/events">Events</Link>
           <Link className="link" to="/faq">FAQ</Link>
-          {nearboardContext.isSignedIn ? <Link to="/profile"><span className="btn btn--small">PROFILE</span></Link> : <span className="btn btn--small" onClick={() => {nearboardContext.wallet.signIn()}}>CONNECT</span>}
+          {nearboardContext.isSignedIn ? 
+          <Link to="/profile">
+            <div className="profile">
+              <div className="profile-image">
+                <img src={nearboardContext.wallet.wallet.metadata.iconUrl} alt={nearboardContext.wallet.wallet.metadata.name + " icon"} />
+              </div>
+              <span>{nearboardContext.wallet.accountId}</span>
+            </div>
+          </Link> : 
+          <span className="btn btn--small" onClick={() => {nearboardContext.wallet.signIn()}}>CONNECT</span>}
         </nav>}
       </div>
     </header>
