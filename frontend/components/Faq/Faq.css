@@ -1,3 +1,10 @@
+.faq .logo-image {
+    text-align: center;
+}
+.faq .logo-image img {
+    width: 60%;
+}
+
 .questions {
     display: flex;
     flex-direction: column;

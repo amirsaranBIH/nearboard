@@ -123,7 +123,7 @@ export default function Home() {
         <main className="main">
           <div className="section">
             <div>
-              <MainHeading heading={"Hot Questions"} tooltip={"Top questions from upcoming events"} />
+              <MainHeading heading={"Hottest Questions"} tooltip={"Top questions from upcoming events"} />
               <div className="questions">
                 {questions.length > 0 ? questions.map(question => {
                   return <Question key={question.id} question={question} event={question.event} options={getQuestionOptions(question)} onVote={onVote} onUnvote={onUnvote} />

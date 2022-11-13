@@ -40,6 +40,36 @@ export default function Project() {
     setUpcomingEventQuestions(upcomingEventQuestions.concat([question]));
   }
 
+  function onVote(question) {
+    setAllUpcomingEventQuestions(allUpcomingEventQuestions.map(q => {
+      if (q.id === question.id && !q.votes.includes(nearboardContext.wallet.accountId)) {
+        q.votes.push(nearboardContext.wallet.accountId);
+      }
+      return q;
+    }));
+    setUpcomingEventQuestions(upcomingEventQuestions.map(q => {
+      if (q.id === question.id  && !q.votes.includes(nearboardContext.wallet.accountId)) {
+        q.votes.push(nearboardContext.wallet.accountId);
+      }
+      return q;
+    }));
+  }
+
+  function onUnvote(question) {
+    setAllUpcomingEventQuestions(allUpcomingEventQuestions.map(q => {
+      if (q.id === question.id) {
+        q.votes = q.votes.filter(voter => voter !== nearboardContext.wallet.accountId);
+      }
+      return q;
+    }));
+    setUpcomingEventQuestions(upcomingEventQuestions.map(q => {
+      if (q.id === question.id) {
+        q.votes = q.votes.filter(voter => voter !== nearboardContext.wallet.accountId);
+      }
+      return q;
+    }));
+  }
+
   if (!project) {
     return null;
   }
@@ -63,7 +93,7 @@ export default function Project() {
               {upcomingEvent.startDate > new Date().getTime() && <AskQuestion projectId={project.id} eventId={upcomingEvent.id} onCreateQuestion={onCreateQuestionHandler} />}
               <div className="questions">
                 {upcomingEventQuestions.length > 0 ? upcomingEventQuestions.map(question => {
-                  return <Question key={question.id} question={question} event={upcomingEvent} />
+                  return <Question key={question.id} question={question} event={upcomingEvent} onVote={onVote} onUnvote={onUnvote} />
                 }) : <div className="no-content">No questions asked</div>}
               </div>
             </div>

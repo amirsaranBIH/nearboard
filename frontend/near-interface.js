@@ -115,11 +115,11 @@ export class Nearboard {
   }
 
   async vote(questionId) {
-    return await this.callMethod({ contractId: this.contractId, method: 'vote', args: { questionId } });
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'vote', args: { questionId } });
   }
 
   async unvote(questionId) {
-    return await this.callMethod({ contractId: this.contractId, method: 'unvote', args: { questionId } });
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'unvote', args: { questionId } });
   }
 
   async followProject(projectId) {
