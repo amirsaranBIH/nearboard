@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import MainHeading from '../partials/MainHeading/MainHeading';
 
 import questionIcon from "../../assets/icons/question.svg";
+import nearboardDefaultLogo from "../../assets/nearboard-default.png";
 
 import './Faq.css';
 
@@ -68,8 +69,11 @@ export default function Faq() {
         </aside>
         <main className="main">
           <div className="section">
-            <div>
+            <div className="faq">
               <MainHeading heading={"Frequently Asked Questions"} tooltip={"Here you may find the answer to your questions about Nearboard"} />
+              <div className="logo-image">
+                <img src={nearboardDefaultLogo} alt="nearboard logo" />
+              </div>
               <div className="selected-question answer-question">{questions[selectedQuestion].question}</div>
               <div className="question-answer">
                 <div dangerouslySetInnerHTML={{ __html: questions[selectedQuestion].answer }} />

@@ -25,13 +25,24 @@
     gap: 2em;
 }
 
+.modal-header .heading .heading-title {
+    font-weight: 700;
+    font-size: 20px;
+}
+
 .modal-header-exit {
     display: block;
     width: 30px;
     height: 30px;
-    background-color: var(--dark-grey);
-    color: white;
+    background-color: var(--grey);
+    color: black;
     border-radius: 100px;
     border: 0;
+    padding: .5em;
     cursor: pointer;
+}
+
+.modal-header-exit img {
+    display: block;
+    width: 100%;
 }

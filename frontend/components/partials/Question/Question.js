@@ -17,34 +17,36 @@ export default function Question({ event, question, options, onVote, onUnvote })
   const [nearRepresented, setNearRepresented] = useState(0);
 
   useEffect(() => {
-    calculateNearRepresented();
+    calculateNearRepresented(question);
   }, []);
 
-  async function calculateNearRepresented() {
+  async function calculateNearRepresented(q) {
     const provider = new providers.JsonRpcProvider({
       url: "https://rpc.testnet.near.org",
     });
 
-    const accountBalanceCache = JSON.parse(localStorage.getItem("nearboard_account_balance_cache")) || {};
+    setNearRepresented("0");
+    const accountBalanceCache = JSON.parse(sessionStorage.getItem("nearboard_account_balance_cache")) || {};
 
-    for (let i = 0; i < question.votes.length; i++) {
+    for (let i = 0; i < q.votes.length; i++) {
       if (!accountBalanceCache[question.votes[i]]) {
         try {
           const account = await provider.query({
             request_type: "view_account",
-            finality: "final",
-            account_id: question.votes[i],
+            finality: "optimistic",
+            account_id: q.votes[i],
           });
-          accountBalanceCache[question.votes[i]] = account.amount;
+          accountBalanceCache[q.votes[i]] = account.amount;
         } catch(err) {
           console.log(err);
         }
       }
-      const newNearAmount = Number(utils.format.formatNearAmount(accountBalanceCache[question.votes[i]])) + Number(nearRepresented);
+
+      const newNearAmount = Number(utils.format.formatNearAmount(accountBalanceCache[q.votes[i]])) + Number(nearRepresented);
       setNearRepresented(newNearAmount.toFixed());
     }
 
-    localStorage.setItem("nearboard_account_balance_cache", JSON.stringify(accountBalanceCache))
+    sessionStorage.setItem("nearboard_account_balance_cache", JSON.stringify(accountBalanceCache))
   }
 
   function vote() {
@@ -54,23 +56,23 @@ export default function Question({ event, question, options, onVote, onUnvote })
       return;
     }
 
-    nearboardContext.contract.vote(question.id).then(() => {
-      if (!nearboardContext.isSignedIn) {
-        toast.error("Not signed in");
-        nearboardContext.wallet.signIn();
-        return;
-      }
-
-      toast.success("Successfully voted");
-      onVote(question);
-    });
+    nearboardContext.contract.vote(question.id);
+    toast.success("Successfully voted");
+    onVote(question);
+    calculateNearRepresented(question);
   }
 
   function unvote() {
-    nearboardContext.contract.unvote(question.id).then(() => {
-      toast.success("Successfully unvoted");
-      onUnvote(question);
-    });
+    if (!nearboardContext.isSignedIn) {
+      toast.error("Not signed in");
+      nearboardContext.wallet.signIn();
+      return;
+    }
+
+    nearboardContext.contract.unvote(question.id);
+    toast.success("Successfully unvoted");
+    onUnvote(question);
+    calculateNearRepresented(question);
   }
 
   return (

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Emitter from '../../../emitter';
 import MainHeading from '../MainHeading/MainHeading';
 
+import exitIcon from "../../../assets/icons/exit.svg"
+
 import './Modal.css';
 
 export default function Modal({ children, heading, tooltip }) {
@@ -28,7 +30,7 @@ export default function Modal({ children, heading, tooltip }) {
       <div className="modal">
         <div className="modal-header">
           <MainHeading heading={heading} tooltip={tooltip} />
-          <button className="modal-header-exit" type="button" onClick={() => {setShowModal(false)}}>✖</button>
+          <button className="modal-header-exit" type="button" onClick={() => {setShowModal(false)}}><img src={exitIcon} alt="exit icon" /></button>
         </div>
         {children}
       </div>

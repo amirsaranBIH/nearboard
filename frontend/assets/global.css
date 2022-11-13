@@ -216,6 +216,7 @@ select.input {
 }
 
 .no-content {
+  display: block !important;
   color: var(--grey);
   text-align: center;
   font-size: 20px;

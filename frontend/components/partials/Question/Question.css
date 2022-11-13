@@ -38,6 +38,10 @@
     cursor: pointer;
 }
 
+.question-vote-btn:hover {
+    background-color: var(--grey);
+}
+
 .question-vote-btn.voted {
     background-color: var(--primary);
 }
