@@ -17,6 +17,8 @@ import addIcon from "../../assets/icons/add.svg"
 import './Profile.css';
 import Button from '../partials/Button/Button';
 import { toast } from 'react-toastify';
+import AllProjectFollowsModal from '../partials/AllProjectFollowsModal/AllProjectFollowsModal';
+import Emitter from '../../emitter';
 
 export default function Profile() {
   const nearboardContext = useContext(NearboardContext);
@@ -91,6 +93,10 @@ export default function Profile() {
     setProjectFollows(projectFollows.filter(follow => follow.id !== project.id));
   }
 
+  function openAllProjectsFollowsModal() {
+    Emitter.emit("OPEN_ALL_PROJECT_FOLLOWS_MODAL", projectFollows);
+  }
+
   return (
     <div>
       <div className="wrapper">
@@ -112,7 +118,10 @@ export default function Profile() {
               <img src={projectsIcon} alt="four boxes icon" />
               <span>Projects You Follow</span>
             </div>
-            <ProjectsListSection projects={projectFollows} />
+            <ProjectsListSection projects={projectFollows.slice(0, 5)} />
+            <div className="view-more">
+              <span className="link" onClick={openAllProjectsFollowsModal}>View all</span>
+          </div>
           </div>
           <FaqSection />
         </aside>
@@ -133,6 +142,7 @@ export default function Profile() {
           </div>
         </main>
       </div>
+      <AllProjectFollowsModal />
     </div>
   );
 }

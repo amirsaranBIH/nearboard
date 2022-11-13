@@ -15,6 +15,12 @@ import { setupMathWallet } from '@near-wallet-selector/math-wallet';
 import { setupMeteorWallet } from '@near-wallet-selector/meteor-wallet';
 import { setupSender } from '@near-wallet-selector/sender';
 import { setupNightly } from '@near-wallet-selector/nightly';
+import { setupWelldoneWallet } from '@near-wallet-selector/welldone-wallet';
+import { setupCoin98Wallet } from '@near-wallet-selector/coin98-wallet';
+import { setupHereWallet } from '@near-wallet-selector/here-wallet';
+import { setupNearFi } from '@near-wallet-selector/nearfi';
+import { setupOptoWallet } from '@near-wallet-selector/opto-wallet';
+import { setupNeth } from '@near-wallet-selector/neth';
 
 import Emitter from './emitter';
 
@@ -48,6 +54,12 @@ export class Wallet {
         setupNightly(),
         setupLedger(),
         setupMathWallet(),
+        setupWelldoneWallet(),
+        setupCoin98Wallet(),
+        setupHereWallet(),
+        setupNearFi(),
+        setupOptoWallet(),
+        setupNeth(),
       ],
     });
 

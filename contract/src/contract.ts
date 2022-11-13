@@ -188,7 +188,11 @@ class Nearboard {
     }
 
     return this.follows.toArray().filter(follow => follow.split(":")[0] === accountId).map(follow => {
-      return this.projects.get(follow.split(":")[1]);
+      const project = this.projects.get(follow.split(":")[1]);
+      return {
+        ...project,
+        hasUpcomingEvent: !!this.getProjectUpcomingEvent({ projectId: project.id })
+      };
     });
   }
 
