@@ -13,5 +13,5 @@ jobs:
         with:
           node-version: "16"
       - run: yarn
-      - run: yarn build:contract
+      - run: yarn deploy
       - run: yarn test:integration
