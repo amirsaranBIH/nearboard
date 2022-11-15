@@ -116,7 +116,7 @@ export default function Profile() {
           <div className="section">
             <div className="heading">
               <img src={projectsIcon} alt="four boxes icon" />
-              <span>Projects You Follow</span>
+              <span>Projects You Follow ({projectFollows.length})</span>
             </div>
             <ProjectsListSection projects={projectFollows.slice(0, 5)} />
             <div className="view-more">

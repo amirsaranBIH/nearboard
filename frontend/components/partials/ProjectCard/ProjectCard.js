@@ -63,8 +63,8 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
           {nearboardContext.isSignedIn && !followers.includes(nearboardContext.wallet.accountId) &&
         <button className="btn btn--small" type="button" onClick={followProject}>Follow</button>}
         </div>
+        {options && <MoreOptions options={options} />}
       </div>
-      {options && <MoreOptions options={options} />}
     </div>
   );
 }

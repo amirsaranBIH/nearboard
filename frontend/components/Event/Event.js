@@ -36,7 +36,7 @@ export default function Event() {
       setAllQuestions(res);
       setQuestions(res);
     });
-  }, []);
+  });
 
   function getQuestionOptions(question) {
     return [
