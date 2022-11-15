@@ -123,10 +123,10 @@ export class Nearboard {
   }
 
   async followProject(projectId) {
-    return await this.callMethod({ contractId: this.contractId, method: 'followProject', args: { projectId } });
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'followProject', args: { projectId } });
   }
 
   async unfollowProject(projectId) {
-    return await this.callMethod({ contractId: this.contractId, method: 'unfollowProject', args: { projectId } });
+    return await this.wallet.callMethod({ contractId: this.contractId, method: 'unfollowProject', args: { projectId } });
   }
 }

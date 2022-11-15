@@ -25,23 +25,21 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
   }, []);
 
   function followProject() {
-    nearboardContext.contract.followProject(project.id).then(() => {
-      toast.success("Successfully followed project");
-      setFollowers(followers.concat([nearboardContext.wallet.accountId]));
-      if (onFollow) {
-        onFollow(project);
-      }
-    });
+    nearboardContext.contract.followProject(project.id);
+    toast.success("Successfully followed project");
+    setFollowers(followers.concat([nearboardContext.wallet.accountId]));
+    if (onFollow) {
+      onFollow(project);
+    }
   }
 
   function unfollowProject() {
-    nearboardContext.contract.unfollowProject(project.id).then(() => {
-      toast.success("Successfully unfollowed project");
-      setFollowers(followers.filter(follower => follower !== nearboardContext.wallet.accountId));
-      if (onUnfollow) {
-        onUnfollow(project);
-      }
-    });
+    nearboardContext.contract.unfollowProject(project.id);
+    toast.success("Successfully unfollowed project");
+    setFollowers(followers.filter(follower => follower !== nearboardContext.wallet.accountId));
+    if (onUnfollow) {
+      onUnfollow(project);
+    }
   }
 
   return (
@@ -51,11 +49,12 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
         <div className="project-card-info">
           <div className="project-card-name"><Link to={"/project/" + project.id}>{project.name}</Link></div>
           <ExternalLink to={project.websiteUrl} />
-          {upcomingEvent && <span className="project-status">
-            <span className="tag">Event Soon</span>
-          </span>}
         </div>
       </div>
+      <p className="project-card-description" title={project.description}>{project.description}</p>
+      {upcomingEvent && <span className="project-status">
+        <span className="tag">Event Soon</span>
+      </span>}
       <div className="project-followers">
         <div>{followers.length} Followers</div>
         {nearboardContext.isSignedIn && followers.includes(nearboardContext.wallet.accountId) && 
