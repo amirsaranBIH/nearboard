@@ -6,7 +6,7 @@ import './SearchQuestionsSection.css';
 
 export default function SearchQuestionsSection({ questions, setQuestions }) {
   function filterQuestions(e) {
-    const filteredQuestions = questions.filter(question => question.question.toLowerCase().includes(e.target.value));
+    const filteredQuestions = questions.filter(question => question.question.toLowerCase().includes(e.target.value.toLowerCase()));
     setQuestions(filteredQuestions);
   }
 

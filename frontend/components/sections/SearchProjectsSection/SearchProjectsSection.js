@@ -6,7 +6,7 @@ import './SearchProjectsSection.css';
 
 export default function SearchProjectsSection({ projects, setProjects }) {
   function filterProjects(e) {
-    const filteredProjects = projects.filter(project => project.name.toLowerCase().includes(e.target.value));
+    const filteredProjects = projects.filter(project => project.name.toLowerCase().includes(e.target.value.toLowerCase()));
     setProjects(filteredProjects);
   }
 
