@@ -16,6 +16,10 @@ export type GetProjectEventsParams = {
     projectId: string;
 };
 
+export type GetQuestionParams = {
+    questionId: string;
+};
+
 export type GetEventQuestionsParams = {
     eventId: string;
 };

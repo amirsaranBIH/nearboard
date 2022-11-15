@@ -15,6 +15,7 @@ import type {
   GetProjectPreviousEventsParams,
   GetProjectUpcomingEventParams,
   GetProjectUpcomingEventQuestionsParams,
+  GetQuestionParams,
   GetUserFollowsParams,
   GetUserProjectsParams,
   UnfollowProjectParams,
@@ -70,6 +71,11 @@ class Nearboard {
   @view({})
   getAllEvents(): Event[] {
     return this.events.toArray().map(x => x[1]);
+  }
+
+  @view({})
+  getQuestion({ questionId }: GetQuestionParams): Question {
+    return this.questions.get(questionId);
   }
 
   @view({})
