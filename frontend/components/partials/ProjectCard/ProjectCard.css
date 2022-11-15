@@ -22,6 +22,10 @@
 }
 
 .project-card-description {
-    margin: .5em 0;
+    margin: 1em 0;
     font-size: 14px;
+}
+
+.project-card-info {
+    overflow-x: hidden;
 }

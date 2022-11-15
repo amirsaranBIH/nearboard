@@ -33,6 +33,7 @@
     display: flex;
     width: 45px;
     height: 45px;
+    min-width: 45px;
     background-color: var(--light-grey);
     border-radius: 100px;
     cursor: pointer;
