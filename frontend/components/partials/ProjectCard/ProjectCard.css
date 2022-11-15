@@ -6,7 +6,7 @@
 .project-card-image {
     display: block;
     border-radius: 100px;
-    max-width: 50px;
+    max-width: 40px;
 }
 
 .project-card-name {
@@ -19,4 +19,9 @@
     gap: .5em;
     justify-content: space-between;
     margin-top: .5em;
+}
+
+.project-card-description {
+    margin: .5em 0;
+    font-size: 14px;
 }
