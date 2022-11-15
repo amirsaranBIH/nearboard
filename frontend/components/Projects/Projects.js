@@ -14,11 +14,15 @@ export default function Projects() {
 
   const [projects, setProjects] = useState([]);
   const [allProjects, setAllProjects] = useState([]);
+  const [previousEvents, setPreviousEvents] = useState([]);
 
   useEffect(() => {
     nearboardContext.contract.getProjects().then(res => {
       setProjects(res);
       setAllProjects(res);
+    });
+    nearboardContext.contract.getThreePreviousEvents().then(res => {
+      setPreviousEvents(res);
     });
   }, []);
 
@@ -28,7 +32,7 @@ export default function Projects() {
         <aside className="aside">
           <SearchProjectsSection projects={allProjects} setProjects={setProjects} />
           <UpcomingEventsSection />
-          <PreviousEventsSection />
+          <PreviousEventsSection events={previousEvents} />
           <FaqSection />
         </aside>
         <main className="main">

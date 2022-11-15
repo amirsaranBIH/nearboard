@@ -1,23 +1,13 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React from 'react';
 
 import { Link } from 'react-router-dom';
 
 import calendarTickIcon from "../../../assets/icons/calendartick.svg"
-import NearboardContext from '../../../store/NearboardContext';
 import EventCard from '../../partials/EventCard/EventCard';
 
 import './PreviousEventsSection.css';
 
-export default function PreviousEventsSection() {
-  const nearboardContext = useContext(NearboardContext);
-
-  const [events, setEvents] = useState([]);
-
-  useEffect(() => {
-    nearboardContext.contract.getThreePreviousEvents().then(res => {
-      setEvents(res);
-    });
-  }, []);
+export default function PreviousEventsSection({ events }) {
 
   return (
     <div className="section">

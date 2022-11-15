@@ -21,6 +21,7 @@ export default function Project() {
   const [upcomingEvent, setUpcomingEvent] = useState({});
   const [allUpcomingEventQuestions, setAllUpcomingEventQuestions] = useState([]);
   const [upcomingEventQuestions, setUpcomingEventQuestions] = useState([]);
+  const [previousEvents, setPreviousEvents] = useState([]);
 
   useEffect(() => {
     nearboardContext.contract.getProject(id).then(res => {
@@ -32,6 +33,9 @@ export default function Project() {
     nearboardContext.contract.getProjectUpcomingEventQuestions(id).then(res => {
       setUpcomingEventQuestions(res);
       setAllUpcomingEventQuestions(res);
+    });
+    nearboardContext.contract.getThreePreviousEvents().then(res => {
+      setPreviousEvents(res);
     });
   }, []);
 
@@ -82,7 +86,7 @@ export default function Project() {
             <ProjectCard project={project} />
           </div>
           <SearchQuestionsSection questions={allUpcomingEventQuestions} setQuestions={setUpcomingEventQuestions} />
-          <PreviousEventsSection />
+          <PreviousEventsSection events={previousEvents} />
           <FaqSection />
         </aside>
         <main className="main">
