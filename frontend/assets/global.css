@@ -264,18 +264,6 @@ select.input {
   .tag {
     font-size: 10px !important;
   }
-
-  .events {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-
-  .all-projects {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-
-  .my-projects {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
 }
 
 @media only screen and (max-width: 550px) {
@@ -301,6 +289,10 @@ select.input {
 
   .input {
     padding: .75em 1em;
+  }
+
+  .question-info .question-asker {
+    display: none;
   }
 }
 

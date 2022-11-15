@@ -34,7 +34,7 @@ export default function Project() {
       setUpcomingEventQuestions(res);
       setAllUpcomingEventQuestions(res);
     });
-    nearboardContext.contract.getThreePreviousEvents().then(res => {
+    nearboardContext.contract.getProjectPreviousEvents(id).then(res => {
       setPreviousEvents(res);
     });
   }, []);
@@ -93,7 +93,7 @@ export default function Project() {
           {upcomingEvent ?
           <div className="section">
             <div>
-              <MainHeading heading={"Questions For " + upcomingEvent.name  + " Event"} tooltip={"Top questions will be answered on the upcoming " + upcomingEvent.name  + " event"} />
+              <MainHeading heading={"Questions For " + upcomingEvent.name  + " Event"} tooltip={"Top questions will be answered on the " + new Date(Number(upcomingEvent.startDate)).toLocaleDateString() + " by the " + project.name + " team"} />
               {upcomingEvent.startDate > new Date().getTime() && <AskQuestion projectId={project.id} eventId={upcomingEvent.id} onCreateQuestion={onCreateQuestionHandler} />}
               <div className="questions">
                 {upcomingEventQuestions.length > 0 ? upcomingEventQuestions.map(question => {

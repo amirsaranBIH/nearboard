@@ -20,6 +20,7 @@ export default function Event() {
 
   const nearboardContext = useContext(NearboardContext);
 
+  const [project, setProject] = useState(null);
   const [event, setEvent] = useState(null);
   const [allQuestions, setAllQuestions] = useState([]);
   const [questions, setQuestions] = useState([]);
@@ -27,6 +28,9 @@ export default function Event() {
   useEffect(() => {
     nearboardContext.contract.getEvent(eventId).then(res => {
       setEvent(res);
+      nearboardContext.contract.getProject(res.projectId).then(res2 => {
+        setProject(res2);
+      });
     });
     nearboardContext.contract.getEventQuestions(eventId).then(res => {
       setAllQuestions(res);
@@ -108,7 +112,7 @@ export default function Event() {
     }));
   }
 
-  if (!event) {
+  if (!event || !project) {
     return null;
   }
 
@@ -126,7 +130,7 @@ export default function Event() {
         <main className="main">
           <div className="section">
             <div>
-              <MainHeading heading={"Questions for " + event.name + " Event"} tooltip={"Top questions will be answered on the " + event.name + " event"} />
+              <MainHeading heading={"Questions for " + event.name + " Event"} tooltip={"Top questions will be answered on the " + new Date(Number(event.startDate)).toLocaleDateString() + " by the " + project.name + " team"} />
               {event.startDate > new Date().getTime() && <AskQuestion projectId={event.projectId} eventId={eventId} onCreateQuestion={onCreateQuestionHandler} />}
               <div className="questions">
                 {questions.length > 0 ? questions.map(question => {

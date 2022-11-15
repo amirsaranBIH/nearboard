@@ -44,21 +44,25 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
 
   return (
     <div className="project-card">
-      <div className="project-card-top">
-        <Link to={"/project/" + project.id}><img className="project-card-image" src={project.logoUrl} alt={project.name} /></Link>
-        <div className="project-card-info">
-          <div className="project-card-name"><Link to={"/project/" + project.id}>{project.name}</Link></div>
-          <ExternalLink to={"https://explorer.testnet.near.org/accounts/" + project.owner} text={project.owner} />
+      <div>
+        <div className="project-card-top">
+          <Link to={"/project/" + project.id}><img className="project-card-image" src={project.logoUrl} alt={project.name} /></Link>
+          <div className="project-card-info">
+            <div className="project-card-name"><Link to={"/project/" + project.id}>{project.name}</Link></div>
+            <ExternalLink to={"https://explorer.testnet.near.org/accounts/" + project.owner} text={project.owner} />
+          </div>
         </div>
+        <p className="project-card-description" title={project.description}>{project.description}</p>
       </div>
-      <p className="project-card-description" title={project.description}>{project.description}</p>
-      <ExternalLink to={project.websiteUrl} text={"view website"} />
-      <div className="project-followers">
-        <div>{followers.length} Followers</div>
-        {nearboardContext.isSignedIn && followers.includes(nearboardContext.wallet.accountId) && 
-        <button className="btn btn--small btn--secondary" type="button" onClick={unfollowProject}>Following</button>}
-        {nearboardContext.isSignedIn && !followers.includes(nearboardContext.wallet.accountId) &&
+      <div>
+        <ExternalLink to={project.websiteUrl} text={"view website"} />
+        <div className="project-followers">
+          <div>{followers.length} Followers</div>
+          {nearboardContext.isSignedIn && followers.includes(nearboardContext.wallet.accountId) && 
+          <button className="btn btn--small btn--secondary" type="button" onClick={unfollowProject}>Following</button>}
+          {nearboardContext.isSignedIn && !followers.includes(nearboardContext.wallet.accountId) &&
         <button className="btn btn--small" type="button" onClick={followProject}>Follow</button>}
+        </div>
       </div>
       {options && <MoreOptions options={options} />}
     </div>

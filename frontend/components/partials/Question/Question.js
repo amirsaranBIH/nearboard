@@ -80,7 +80,7 @@ export default function Question({ event, question, options, onVote, onUnvote })
       <div className="question-text">{question.question}</div>
       <hr />
       <div className="question-info">
-        <div>asks {question.asker} - for <Link className="link" to={"/event/" + event.id}>{event.name}</Link></div>
+        <div className="question-asker">asks {question.asker} - for <Link className="link" to={"/event/" + event.id}>{event.name}</Link></div>
         <div className="question-vote">
             { question.votes.some(vote => vote === nearboardContext.wallet.accountId) ? 
               <div className="question-vote-btn voted" onClick={unvote}>
