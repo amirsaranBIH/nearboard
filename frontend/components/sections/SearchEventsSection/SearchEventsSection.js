@@ -10,7 +10,7 @@ export default function SearchEventsSection({ events, setEvents }) {
 
   function filterEvents(name, type) {
     const filteredEvents = events.filter(event => {
-      return event.name.toLowerCase().includes(name) &&
+      return event.name.toLowerCase().includes(name.toLowerCase()) &&
             (type === "" || event.eventType === type);
     });
     setEvents(filteredEvents);
