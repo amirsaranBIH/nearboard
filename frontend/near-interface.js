@@ -44,6 +44,10 @@ export class Nearboard {
     return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getProjectEvents', args: { projectId } });
   }
 
+  async getProjectPreviousEvents(projectId) {
+    return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getProjectPreviousEvents', args: { projectId } });
+  }
+
   async getProjectUpcomingEvent(projectId) {
     return await this.wallet.viewMethod({ contractId: this.contractId, method: 'getProjectUpcomingEvent', args: { projectId } });
   }

@@ -168,13 +168,6 @@ test('returns three upcoming events', async (t) => {
   t.is(events.length, 1);
 });
 
-test('returns project upcoming events', async (t) => {
-  const { contract } = t.context.accounts;
-
-  const events: any = await contract.view('getProjectUpcomingEvents', { projectId: "1" });
-  t.is(events.length, 1);
-});
-
 test('returns project upcoming event', async (t) => {
   const { contract } = t.context.accounts;
 

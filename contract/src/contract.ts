@@ -15,7 +15,6 @@ import type {
   GetProjectPreviousEventsParams,
   GetProjectUpcomingEventParams,
   GetProjectUpcomingEventQuestionsParams,
-  GetProjectUpcomingEventsParams,
   GetQuestionParams,
   GetUserFollowsParams,
   GetUserProjectsParams,
@@ -73,7 +72,7 @@ class Nearboard {
   getAllEvents(): Event[] {
     return this.events.toArray().map(x => x[1]);
   }
-  
+
   @view({})
   getQuestion({ questionId }: GetQuestionParams): Question {
     return this.questions.get(questionId);
@@ -88,12 +87,6 @@ class Nearboard {
   getThreeUpcomingEvents(): Event[] {
     const timestamp = near.blockTimestamp().toString();
     return this.events.toArray().map(x => x[1]).filter(event => event.startDate.toString() >= timestamp).slice(0, 3);
-  }
-
-  @view({})
-  getProjectUpcomingEvents({ projectId }: GetProjectUpcomingEventsParams): Event[] {
-    const timestamp = near.blockTimestamp().toString();
-    return this.events.toArray().map(x => x[1]).filter(event => event.projectId === projectId && event.startDate.toString() >= timestamp);
   }
 
   @view({})
@@ -173,12 +166,7 @@ class Nearboard {
       return b.followers - a.followers;
     });
 
-    return projectFollowerCounts.splice(0, 5).map(x => {
-      return {
-        ...this.getProject({ projectId: x.id }),
-        hasUpcomingEvent: !!this.getProjectUpcomingEvent({ projectId: x.id })
-      }
-    });
+    return projectFollowerCounts.splice(0, 5).map(x => this.getProject({ projectId: x.id }));
   }
 
   @view({})
@@ -187,13 +175,7 @@ class Nearboard {
       throw Error("Invalid account id");
     }
 
-    return this.follows.toArray().filter(follow => follow.split(":")[0] === accountId).map(follow => {
-      const project = this.projects.get(follow.split(":")[1]);
-      return {
-        ...project,
-        hasUpcomingEvent: !!this.getProjectUpcomingEvent({ projectId: project.id })
-      };
-    });
+    return this.follows.toArray().filter(follow => follow.split(":")[0] === accountId).map(follow => this.projects.get(follow.split(":")[1]));
   }
 
   @view({})

@@ -24,10 +24,6 @@ export type GetEventQuestionsParams = {
     eventId: string;
 };
 
-export type GetProjectUpcomingEventsParams = {
-    projectId: string;
-};
-
 export type GetProjectUpcomingEventParams = {
     projectId: string;
 };

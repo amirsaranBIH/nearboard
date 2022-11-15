@@ -48,13 +48,11 @@ export default function ProjectCard({ project, options, onFollow, onUnfollow }) 
         <Link to={"/project/" + project.id}><img className="project-card-image" src={project.logoUrl} alt={project.name} /></Link>
         <div className="project-card-info">
           <div className="project-card-name"><Link to={"/project/" + project.id}>{project.name}</Link></div>
-          <ExternalLink to={project.websiteUrl} />
+          <ExternalLink to={"https://explorer.testnet.near.org/accounts/" + project.owner} text={project.owner} />
         </div>
       </div>
       <p className="project-card-description" title={project.description}>{project.description}</p>
-      {upcomingEvent && <span className="project-status">
-        <span className="tag">Event Soon</span>
-      </span>}
+      <ExternalLink to={project.websiteUrl} text={"view website"} />
       <div className="project-followers">
         <div>{followers.length} Followers</div>
         {nearboardContext.isSignedIn && followers.includes(nearboardContext.wallet.accountId) && 
